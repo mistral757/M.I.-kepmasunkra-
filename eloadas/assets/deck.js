@@ -282,7 +282,7 @@ const slideTitle = sl => {
 const mmss = ms => { const s = Math.floor(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
 function openPresenter(){
   if (pv && !pv.closed){ pv.focus(); return; }
-  pv = window.open('', 'eloadoi-nezet', 'width=900,height=640');
+  pv = window.open('', 'eloadoi-nezet', 'width=980,height=900');
   if (!pv){ alert('A böngésző letiltotta a felugró ablakot. Engedélyezd ennél az oldalnál, és nyomd meg újra a P-t.'); return; }
   pv.document.open();
   pv.document.write(`<!DOCTYPE html><html lang="hu"><head><meta charset="utf-8"><title>Előadói nézet</title><style>
@@ -295,17 +295,34 @@ function openPresenter(){
     #notes{white-space:pre-wrap;font-size:22px;color:#f4f4f4;margin-top:6px}
     #notes:empty::before{content:"(ehhez a diához nincs jegyzet)";color:#566c86}
     button{font:inherit;font-size:15px;background:#333c57;color:#f4f4f4;border:0;padding:6px 14px;cursor:pointer}
-    .help{position:fixed;bottom:16px;left:32px;right:32px;font-size:14px;color:#566c86}
+    .help{font-size:14px;color:#566c86;margin-top:26px}
+    .live{margin-top:10px;padding:14px 16px;background:#29366f}
+    .live textarea{display:block;width:100%;box-sizing:border-box;margin:4px 0 10px;font:17px/1.35 'Segoe UI',Calibri,Arial,sans-serif;background:#1a1c2c;color:#f4f4f4;border:1px solid #566c86;padding:8px}
+    .live small{color:#94b0c2;font-size:14px}
+    .live #lgo{background:#ffcd75;color:#1a1c2c;font-weight:600}
   </style></head><body>
     <div class="row"><span>Eltelt <b id="el">0:00</b></span><span>Óra <b id="ck"></b></span><span>Dia <b id="nr"></b></span><button id="rs" type="button">Idő nullázása</button></div>
     <div class="lbl">Most</div><h1 id="cu"></h1>
     <div class="lbl">Következik</div><div id="nx"></div>
     <div class="lbl">Jegyzet</div><div id="notes"></div>
-    <p class="help">Innen is lapozhatsz: → / ← / Szóköz / Enter, B = fekete képernyő. A vetítő ablakot tedd a projektorra, F = teljes képernyő.</p>
+    <div class="lbl">Élő kérdés</div>
+    <div class="live">
+      <small>Kérdés (ez kerül a sárga gombra)</small><textarea id="pq" rows="2"></textarea>
+      <small>Claude válasza a chatből (bekezdések üres sorral elválasztva)</small><textarea id="pa" rows="7"></textarea>
+      <button id="lgo" type="button">Betöltés a „Kérdezzétek Claude-ot” diára</button> <small id="pst"></small>
+    </div>
+    <p class="help">Innen is lapozhatsz (ha nem egy mezőben gépelsz): → / ← / Szóköz / Enter, B = fekete képernyő. A vetítő ablakot tedd a projektorra, F = teljes képernyő. Betöltés után Enter: indul a válasz.</p>
   </body></html>`);
   pv.document.close();
   pv.document.addEventListener('keydown', onKey);
   pv.document.getElementById('rs').addEventListener('click', () => { pvStart = Date.now(); tickPresenter(); });
+  pv.document.getElementById('lgo').addEventListener('click', () => {
+    const d = pv.document, q = d.getElementById('pq'), a = d.getElementById('pa');
+    if (loadLive(q.value, a.value)){
+      d.getElementById('pst').textContent = 'Betöltve: ' + (q.value.trim() || '(a kérdés nem változott)');
+      q.value = ''; a.value = ''; d.activeElement?.blur();
+    }
+  });
   if (!pvStart) pvStart = Date.now();
   clearInterval(pvTimer); pvTimer = setInterval(tickPresenter, 1000);
   updatePresenter();
@@ -325,6 +342,54 @@ function updatePresenter(){
   const n = sl.querySelector('aside.notes');
   d.getElementById('notes').textContent = n ? n.textContent.replace(/[ \t]+/g, ' ').replace(/\n\s*/g, '\n').trim() : '';
   tickPresenter();
+}
+
+/* élő kérdés: a teremből érkező kérdés és a chatből bemásolt válasz betöltése az „élő” diára.
+   Betölthető az előadói nézetből (P) vagy a K billentyűvel nyíló panelről; a fájlt nem kell szerkeszteni. */
+function parseAnswer(text){
+  let t = (text || '').replace(/\r/g, '').trim();
+  t = t.replace(/^\s*claude\s*:\s*/i, '');                           // „Claude:” előtag
+  t = t.replace(/\*\*|__|`/g, '').replace(/^#+\s*/gm, '').replace(/^\s*[-*•]\s+/gm, ''); // chatből hozott jelölés
+  let paras = t.split(/\n\s*\n/);
+  if (paras.length === 1) paras = t.split('\n');
+  return paras.map(p => p.replace(/\s+/g, ' ').trim()).filter(Boolean);
+}
+function loadLive(question, answerText){
+  const sl = stage.querySelector('.slide.live'); if (!sl) return false;
+  const qa = sl.querySelector('.qa'), q = qa.querySelector('.q'), a = qa.querySelector('.a');
+  finishTyping();
+  if (question && question.trim()) q.textContent = question.replace(/\s+/g, ' ').trim();
+  a.innerHTML = '';
+  parseAnswer(answerText).forEach(t => { const p = document.createElement('p'); p.textContent = t; a.append(p); });
+  qa.classList.remove('started', 'more'); qa._page = 0;
+  const btn = qa.querySelector('.ask'); btn.disabled = false; btn.textContent = '▶ ' + q.textContent;
+  qa.querySelector('.out').style.fontSize = ''; idle(qa);
+  go(slides.indexOf(sl));
+  return true;
+}
+const livePanel = document.getElementById('live');
+function toggleLive(open){
+  if (!livePanel) return;
+  livePanel.classList.toggle('open', open);
+  if (open){ livePanel.querySelector('#lq').focus(); liveStats(); }
+  else document.activeElement?.blur();
+}
+function liveStats(){
+  const t = livePanel.querySelector('#la').value, n = parseAnswer(t);
+  livePanel.querySelector('#ls').textContent = t.trim()
+    ? `Beillesztve: ${t.trim().length} karakter, ${n.length} bekezdés (a szöveg itt rejtve marad).`
+    : 'A válasz szövege itt rejtve marad, hogy a vetítésen ne látsszon előre.';
+}
+if (livePanel){
+  const lq = livePanel.querySelector('#lq'), la = livePanel.querySelector('#la');
+  const submit = () => { if (loadLive(lq.value, la.value)){ lq.value = ''; la.value = ''; toggleLive(false); } };
+  la.addEventListener('input', liveStats);
+  livePanel.querySelector('#lok').addEventListener('click', submit);
+  livePanel.querySelector('#lno').addEventListener('click', () => toggleLive(false));
+  livePanel.addEventListener('keydown', e => {
+    if (e.key === 'Escape'){ e.preventDefault(); toggleLive(false); }
+    else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)){ e.preventDefault(); submit(); }
+  });
 }
 
 /* diák listája */
@@ -349,6 +414,8 @@ document.getElementById('prev').addEventListener('click', e => { prev(); e.curre
 count.addEventListener('click', () => toggleMenu(true));
 
 function onKey(e){
+  if (e.target && e.target.closest && e.target.closest('textarea, input')) return; // gépelés a mezőkben
+  if (livePanel && livePanel.classList.contains('open')) return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (menu.classList.contains('open')){
     if (e.key === 'Escape' || e.key === 'm' || e.key === 'M'){ e.preventDefault(); toggleMenu(false); }
@@ -376,6 +443,7 @@ function onKey(e){
     case 'b': case 'B': case '.': e.preventDefault(); toggleBlank(true); break;
     case 'o': case 'O': e.preventDefault(); toggleReadable(); break;
     case 'p': case 'P': e.preventDefault(); openPresenter(); break;
+    case 'k': case 'K': e.preventDefault(); toggleLive(true); break;
   }
 }
 addEventListener('keydown', onKey);

@@ -45,6 +45,7 @@
     Home / End : első / utolsó dia
     B vagy . : fekete képernyő (bármelyik billentyű visszahozza)
     P : előadói nézet külön ablakban (óra, eltelt idő, következő dia, jegyzet; innen is lapozható)
+    K : élő kérdés betöltése a „Kérdezzétek Claude-ot” diára (ugyanez az előadói nézetben is)
     O : olvasható mód — a hosszabb szövegek rendes betűvel (ki-be kapcsol)
     Ctrl+P : nyomtatás / PDF — minden dia egy oldal, minden válasz kinyitva
              (a nyomtatási ablakban: „Háttérgrafika” bekapcsolva)
@@ -920,6 +921,24 @@
   </div></div>
 </section>
 
+<!-- ============ ÉLŐ KÉRDÉSEK ============ -->
+<!-- A kérdést és Claude válaszát előadás közben lehet betölteni: előadói nézet (P) → „Élő kérdés”,
+     vagy a K billentyű. Ide nem kell semmit írni; az alábbi kérdés csak a kiinduló felirat. -->
+<section class="slide live" data-block="Kérdések">
+  <div class="cols">
+    <div class="left">
+      <h2>Kérdezzétek Claude-ot</h2>
+      <ul class="keys"><li>a kérdés most megy Claude-hoz</li><li>a válasz most készül</li></ul>
+    </div>
+    <div class="right">
+      <div class="qa">
+        <p class="q">Mi a kérdésetek?</p>
+        <div class="a"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="slide statement">
   <p class="big">Köszönöm a figyelmet.</p>
 </section>
@@ -934,6 +953,15 @@
 <div id="menu" role="dialog" aria-label="Diák listája">
   <p>Diák — kattints egyre, vagy Esc a bezáráshoz</p>
   <ol></ol>
+</div>
+<div id="live" role="dialog" aria-label="Élő kérdés betöltése">
+  <p>Élő kérdés — Ctrl+Enter: betöltés, Esc: mégse</p>
+  <label for="lq">Kérdés (a sárga gombra kerül)</label>
+  <textarea id="lq" rows="2"></textarea>
+  <label for="la">Claude válasza a chatből — illeszd be</label>
+  <textarea id="la" rows="6" spellcheck="false"></textarea>
+  <p id="ls"></p>
+  <button type="button" id="lok">Betöltés</button> <button type="button" id="lno">Mégse</button>
 </div>
 </div>
 
