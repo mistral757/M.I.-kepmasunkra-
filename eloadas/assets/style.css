@@ -59,6 +59,7 @@ h2{font-size:30px;line-height:1.45;max-width:1100px}
 .out p{margin:0 0 .5em}
 .qa.started .ask{display:none}
 .out p.sent{color:var(--amber)}
+.out p.more{color:var(--amber);font-size:.8em;margin:0}
 .cursor{display:inline-block;width:.5em;height:.9em;margin-left:2px;background:var(--cyan);vertical-align:-.08em;animation:blink 1s steps(1) infinite}
 .cursor.idle{opacity:.5}
 @keyframes blink{50%{visibility:hidden}}
@@ -114,3 +115,41 @@ canvas.mirror.small{width:216px;height:306px}
 #menu li button:hover,#menu li button:focus-visible,#menu li.here button{color:var(--paper);outline:none}
 
 @media (prefers-reduced-motion:reduce){.cursor{animation:none}.step.shown{animation:none}}
+
+/* előadói jegyzet: csak az előadói nézetben (P) látszik */
+aside.notes{display:none}
+
+/* fekete képernyő (B) */
+#blank{position:absolute;inset:0;z-index:80;background:#000;display:none}
+#blank.on{display:block}
+
+/* olvasható mód (O): a címek pixelesek maradnak, a hosszabb szövegek rendes betűvel */
+body.readable .keys,body.readable .out,body.readable blockquote.dani,body.readable .chips,
+body.readable .statement .sub,body.readable .divider .sub,body.readable .cover .subtitle,body.readable .verse blockquote{
+  font-family:'Segoe UI',Calibri,Arial,sans-serif}
+body.readable .out{font-size:26px;line-height:1.25}
+body.readable blockquote.dani{font-size:27px;line-height:1.3}
+body.readable .keys{font-size:34px;line-height:1.25}
+body.readable .keys.tight{font-size:29px}
+body.readable .cols .left .keys{font-size:29px}
+body.readable .chips{font-size:23px}
+body.readable .verse blockquote{font-size:38px;line-height:1.3}
+body.readable .statement .sub,body.readable .divider .sub,body.readable .cover .subtitle{font-size:36px;line-height:1.3}
+
+/* nyomtatás / PDF (Ctrl+P → Mentés PDF-ként, Háttérgrafika: be): minden dia egy oldal,
+   minden címszó és Claude-válasz kinyitva — tartaléknak vagy kiosztott anyagnak */
+@page{size:1280px 720px;margin:0}
+@media print{
+  html,body{height:auto;overflow:visible;background:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #stage{position:static;transform:none!important;width:1280px;height:auto;overflow:visible}
+  #stage::after,#hud,#menu,#blank,.ask,.term{display:none!important}
+  .slide{position:relative;display:flex!important;width:1280px;height:720px;overflow:hidden;break-after:page;page-break-after:always;background:var(--ink)}
+  .step{opacity:1}
+  .step.shown{animation:none}
+  .qa .q[hidden],.qa .a[hidden]{display:block!important}
+  .qa .q{font:15px/1.7 var(--pix);color:var(--amber);margin:0}
+  .qa .a{background:#10121f;padding:14px 22px;margin:4px;color:var(--cyan);font-size:24px;line-height:1.05;
+    box-shadow:0 -4px 0 var(--sea),0 4px 0 var(--sea),-4px 0 0 var(--sea),4px 0 0 var(--sea)}
+  .qa .a p{margin:0 0 .45em}
+  .dialog .qa .a{font-size:22px}
+}

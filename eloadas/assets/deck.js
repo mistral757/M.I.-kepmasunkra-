@@ -2,6 +2,7 @@
 /* ===== BEÁLLÍTÁSOK ===== */
 const GEPELES_MS = 24;                 // gépelési sebesség: ennyi ezredmásodperc betűnként (kisebb = gyorsabb)
 const TOVABB_ELOBB_A_DIAN_BELUL = true; // true: a → / lapozó előbb a dián lévő kérdést, címszót indítja
+const VALASZ_MIN_BETUMERET = 26;       // ha egy válasz nem fér ki, a betű eddig (px) kisebbedhet; ha így sem fér ki, részletekben jelenik meg
 
 /* ===== innentől nem kell szerkeszteni ===== */
 const stage = document.getElementById('stage');
@@ -63,7 +64,10 @@ slides.forEach(sl => {
     term.append(who, out); qa.append(btn, term);
     idle(qa);
     btn.addEventListener('click', () => { if (!qa.classList.contains('started')) startQA(qa); btn.blur(); });
-    term.addEventListener('click', () => { if (typing && typing.qa === qa) finishTyping(); });
+    term.addEventListener('click', () => {
+      if (typing && typing.qa === qa) finishTyping();
+      else if (qa.classList.contains('more')) nextPage(qa);
+    });
   });
 });
 
@@ -72,18 +76,91 @@ function idle(qa){
   const c = document.createElement('span'); c.className = 'cursor idle'; out.append(c);
 }
 
+/* tördelés: a választ előre lemérjük. Ha a betű kis mértékű kisebbítésével kifér, egyben írjuk ki;
+   ha nem, bekezdések mentén részletekre bontjuk, és a következő gombnyomás hozza a folytatást.
+   Így semmi nem gördül el, és a betű sem lesz olvashatatlanul kicsi. */
+const readableMode = () => document.body.classList.contains('readable');
+function sentLine(qa){
+  const q = qa.querySelector('.q'); if (!q) return null;
+  const s = document.createElement('p'); s.className = 'sent'; s.textContent = '> ' + q.textContent.trim(); return s;
+}
+function renderPage(qa, paras, first, more, cursor){
+  const out = qa.querySelector('.out');
+  out.innerHTML = '';
+  if (first){ const s = sentLine(qa); if (s) out.append(s); }
+  paras.forEach(t => { const p = document.createElement('p'); p.textContent = t; out.append(p); });
+  const last = out.lastElementChild;
+  if (last && cursor) last.append(cursor);
+  if (more){ const m = document.createElement('p'); m.className = 'more'; m.textContent = '▼ folytatás'; out.append(m); }
+}
+function layoutAnswer(qa){
+  const out = qa.querySelector('.out'), term = qa.querySelector('.term');
+  const paras = [...qa.querySelectorAll('.a > p')].map(p => p.textContent.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  const fits = () => term.scrollHeight <= term.clientHeight;
+  const probe = () => { const c = document.createElement('span'); c.className = 'cursor'; return c; };
+  const paginate = size => {
+    out.style.fontSize = size + 'px';
+    const pages = []; let page = [];
+    paras.forEach(t => {
+      renderPage(qa, page.concat(t), pages.length === 0, true, probe());
+      if (fits() || !page.length) page.push(t); else { pages.push(page); page = [t]; }
+    });
+    if (page.length) pages.push(page);
+    // akkor jó, ha minden részlet ténylegesen kifér (egy túl hosszú bekezdés önmagában is kilóghat)
+    const ok = pages.every((pg, k) => { renderPage(qa, pg, k === 0, k < pages.length - 1, probe()); return fits(); });
+    return { size, pages, ok };
+  };
+  out.style.fontSize = '';
+  const base = parseFloat(getComputedStyle(out).fontSize);
+  const min = readableMode() ? Math.round(VALASZ_MIN_BETUMERET * .85) : VALASZ_MIN_BETUMERET; // a rendes betű nagyobbnak hat
+  // 1. a lehető legnagyobb betű, amellyel egyben kifér
+  for (let size = base; size >= min; size--){
+    out.style.fontSize = size + 'px';
+    renderPage(qa, paras, true, false, probe());
+    if (fits()){ out.innerHTML = ''; return { size, pages: [paras] }; }
+  }
+  // 2. ha nem fér ki: a legkevesebb részlet, ahhoz a legnagyobb betű
+  let best = null;
+  for (let size = base; size >= min; size--){
+    const l = paginate(size);
+    if (l.ok && (!best || l.pages.length < best.pages.length)) best = l;
+  }
+  // 3. végső eset: egy bekezdés önmagában sem fér ki — kisebb betű
+  for (let size = min - 1; !best && size >= 12; size--){ const l = paginate(size); if (l.ok) best = l; }
+  out.innerHTML = '';
+  return best || paginate(min);
+}
+function prepareQA(qa){
+  const l = layoutAnswer(qa);
+  qa._pages = l.pages; qa._mode = readableMode();
+  qa.querySelector('.out').style.fontSize = l.size + 'px';
+}
+
 function startQA(qa){
   finishTyping();
   qa.classList.add('started');
   qa.querySelector('.ask').disabled = true;
+  prepareQA(qa);
+  qa._page = 0;
+  typePage(qa);
+}
+function typePage(qa){
   const out = qa.querySelector('.out'), term = qa.querySelector('.term');
-  out.innerHTML = '';
-  const q = qa.querySelector('.q');
-  if (q){ const s = document.createElement('p'); s.className = 'sent'; s.textContent = '> ' + q.textContent.trim(); out.append(s); }
-  const paras = [...qa.querySelectorAll('.a > p')].map(p => p.textContent.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  qa.classList.remove('more');
+  renderPage(qa, [], qa._page === 0, false, null);
   const cursor = document.createElement('span'); cursor.className = 'cursor';
-  typing = { qa, out, term, paras, pi: 0, ci: 0, p: null, text: null, cursor, timer: null };
+  typing = { qa, out, term, paras: qa._pages[qa._page], pi: 0, ci: 0, p: null, text: null, cursor, timer: null };
   tick();
+}
+function nextPage(qa){ qa._page++; typePage(qa); }
+/* a már elindított válasz újratördelése (olvasható mód váltásakor), gépelés nélkül */
+function relayoutQA(qa){
+  prepareQA(qa);
+  qa._page = Math.min(qa._page || 0, qa._pages.length - 1);
+  const more = qa._page < qa._pages.length - 1;
+  const c = document.createElement('span'); c.className = 'cursor';
+  renderPage(qa, qa._pages[qa._page], qa._page === 0, more, c);
+  qa.classList.toggle('more', more);
 }
 
 function tick(){
@@ -120,15 +197,21 @@ function endTyping(){
   const t = typing; if (!t) return;
   typing = null;
   const last = t.out.lastElementChild; if (last) last.append(t.cursor);
-  t.term.scrollTop = t.term.scrollHeight;
+  if (t.qa._page < t.qa._pages.length - 1){
+    const m = document.createElement('p'); m.className = 'more'; m.textContent = '▼ folytatás'; t.out.append(m);
+    t.qa.classList.add('more');
+  }
+  t.term.scrollTop = 0;
 }
 
-/* a dián belüli következő lépés: címszó vagy kérdés */
+/* a dián belüli következő lépés: címszó, egy válasz folytatása, vagy kérdés */
 function act(){
   if (typing){ finishTyping(); return true; }
-  const item = slides[cur].querySelector('.step:not(.shown), .qa:not(.started)');
+  const item = slides[cur].querySelector('.step:not(.shown), .qa.more, .qa:not(.started)');
   if (!item) return false;
-  if (item.classList.contains('step')) item.classList.add('shown'); else startQA(item);
+  if (item.classList.contains('step')) item.classList.add('shown');
+  else if (item.classList.contains('more')) nextPage(item);
+  else startQA(item);
   return true;
 }
 
@@ -141,6 +224,8 @@ function go(i){
   bar.style.width = (slides.length > 1 ? cur / (slides.length - 1) * 100 : 100) + '%';
   count.textContent = (cur + 1) + '/' + slides.length;
   history.replaceState(null, '', '#' + (cur + 1));
+  slides[cur].querySelectorAll('.qa.started').forEach(qa => { if (qa._mode !== readableMode()) relayoutQA(qa); });
+  updatePresenter();
 }
 function next(){ if (TOVABB_ELOBB_A_DIAN_BELUL && act()) return; go(cur + 1); }
 function prev(){ go(cur - 1); }
@@ -150,8 +235,75 @@ function resetSlide(){
   const sl = slides[cur];
   sl.querySelectorAll('.step.shown').forEach(s => s.classList.remove('shown'));
   sl.querySelectorAll('.qa').forEach(qa => {
-    qa.classList.remove('started'); qa.querySelector('.ask').disabled = false; idle(qa);
+    qa.classList.remove('started', 'more'); qa.querySelector('.ask').disabled = false;
+    qa._page = 0; qa.querySelector('.out').style.fontSize = ''; idle(qa);
   });
+}
+
+/* fekete képernyő (B vagy pont — sok lapozón külön gomb): bármelyik billentyű visszahozza */
+const blank = document.createElement('div'); blank.id = 'blank'; stage.append(blank);
+function toggleBlank(on){ blank.classList.toggle('on', on); }
+
+/* olvasható mód (O): a hosszabb szövegek rendes betűvel — ha a teremben a pixeles betű nehezen olvasható */
+function toggleReadable(){
+  finishTyping();
+  document.body.classList.toggle('readable');
+  slides[cur].querySelectorAll('.qa.started').forEach(relayoutQA);
+}
+
+/* előadói nézet (P): külön ablak a laptopon — óra, eltelt idő, következő dia, jegyzet.
+   Jegyzet: a diába tett <aside class="notes">…</aside> szövege; a vetítésen nem látszik. */
+let pv = null, pvStart = null, pvTimer = null;
+const slideTitle = sl => {
+  const h = sl && sl.querySelector('h1, h2, .big, cite');
+  return h ? h.innerHTML.replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() : '';
+};
+const mmss = ms => { const s = Math.floor(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+function openPresenter(){
+  if (pv && !pv.closed){ pv.focus(); return; }
+  pv = window.open('', 'eloadoi-nezet', 'width=900,height=640');
+  if (!pv){ alert('A böngésző letiltotta a felugró ablakot. Engedélyezd ennél az oldalnál, és nyomd meg újra a P-t.'); return; }
+  pv.document.open();
+  pv.document.write(`<!DOCTYPE html><html lang="hu"><head><meta charset="utf-8"><title>Előadói nézet</title><style>
+    body{margin:0;padding:24px 32px;background:#1a1c2c;color:#f4f4f4;font:20px/1.4 'Segoe UI',Calibri,Arial,sans-serif}
+    .row{display:flex;gap:40px;align-items:baseline;color:#94b0c2;font-size:18px}
+    .row b{color:#ffcd75;font-size:40px;font-weight:600}
+    h1{font-size:30px;margin:22px 0 4px;color:#f4f4f4}
+    .lbl{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#566c86;margin-top:22px}
+    #nx{font-size:22px;color:#73eff7}
+    #notes{white-space:pre-wrap;font-size:22px;color:#f4f4f4;margin-top:6px}
+    #notes:empty::before{content:"(ehhez a diához nincs jegyzet)";color:#566c86}
+    button{font:inherit;font-size:15px;background:#333c57;color:#f4f4f4;border:0;padding:6px 14px;cursor:pointer}
+    .help{position:fixed;bottom:16px;left:32px;right:32px;font-size:14px;color:#566c86}
+  </style></head><body>
+    <div class="row"><span>Eltelt <b id="el">0:00</b></span><span>Óra <b id="ck"></b></span><span>Dia <b id="nr"></b></span><button id="rs" type="button">Idő nullázása</button></div>
+    <div class="lbl">Most</div><h1 id="cu"></h1>
+    <div class="lbl">Következik</div><div id="nx"></div>
+    <div class="lbl">Jegyzet</div><div id="notes"></div>
+    <p class="help">Innen is lapozhatsz: → / ← / Szóköz / Enter, B = fekete képernyő. A vetítő ablakot tedd a projektorra, F = teljes képernyő.</p>
+  </body></html>`);
+  pv.document.close();
+  pv.document.addEventListener('keydown', onKey);
+  pv.document.getElementById('rs').addEventListener('click', () => { pvStart = Date.now(); tickPresenter(); });
+  if (!pvStart) pvStart = Date.now();
+  clearInterval(pvTimer); pvTimer = setInterval(tickPresenter, 1000);
+  updatePresenter();
+}
+function tickPresenter(){
+  if (!pv || pv.closed){ clearInterval(pvTimer); return; }
+  const d = pv.document;
+  d.getElementById('el').textContent = mmss(Date.now() - pvStart);
+  d.getElementById('ck').textContent = new Date().toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' });
+}
+function updatePresenter(){
+  if (!pv || pv.closed) return;
+  const d = pv.document, sl = slides[cur], nx = slides[cur + 1];
+  d.getElementById('nr').textContent = (cur + 1) + '/' + slides.length;
+  d.getElementById('cu').textContent = (sl.dataset.block ? sl.dataset.block + ' — ' : '') + (slideTitle(sl) || 'Dia ' + (cur + 1));
+  d.getElementById('nx').textContent = nx ? (slideTitle(nx) || 'Dia ' + (cur + 2)) : '— vége —';
+  const n = sl.querySelector('aside.notes');
+  d.getElementById('notes').textContent = n ? n.textContent.replace(/[ \t]+/g, ' ').replace(/\n\s*/g, '\n').trim() : '';
+  tickPresenter();
 }
 
 /* diák listája */
@@ -159,9 +311,7 @@ const ol = menu.querySelector('ol');
 slides.forEach((sl, i) => {
   const li = document.createElement('li');
   const b = document.createElement('button'); b.type = 'button';
-  const h = sl.querySelector('h1, h2, .big, cite');
-  const label = h ? h.innerHTML.replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() : '';
-  b.textContent = label || 'Dia ' + (i + 1);
+  b.textContent = slideTitle(sl) || 'Dia ' + (i + 1);
   b.addEventListener('click', () => { toggleMenu(false); go(i); });
   li.append(b); ol.append(li);
 });
@@ -177,9 +327,14 @@ document.getElementById('next').addEventListener('click', e => { next(); e.curre
 document.getElementById('prev').addEventListener('click', e => { prev(); e.currentTarget.blur(); });
 count.addEventListener('click', () => toggleMenu(true));
 
-addEventListener('keydown', e => {
+function onKey(e){
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (menu.classList.contains('open')){
     if (e.key === 'Escape' || e.key === 'm' || e.key === 'M'){ e.preventDefault(); toggleMenu(false); }
+    return;
+  }
+  if (blank.classList.contains('on')){
+    if (!['Shift', 'Control', 'Alt', 'Meta'].includes(e.key)){ e.preventDefault(); toggleBlank(false); }
     return;
   }
   switch (e.key){
@@ -197,8 +352,12 @@ addEventListener('keydown', e => {
       if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
       else document.exitFullscreen?.();
       break;
+    case 'b': case 'B': case '.': e.preventDefault(); toggleBlank(true); break;
+    case 'o': case 'O': e.preventDefault(); toggleReadable(); break;
+    case 'p': case 'P': e.preventDefault(); openPresenter(); break;
   }
-});
+}
+addEventListener('keydown', onKey);
 
 const start = parseInt(location.hash.slice(1), 10);
 slides.forEach(s => s.classList.remove('active'));

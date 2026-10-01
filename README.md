@@ -45,8 +45,16 @@ A webre csak az `eloadas/` mappa kerül ki. A tervezet a GitHubon marad; ha a re
 | F | teljes képernyő |
 | R | az aktuális dia alaphelyzetbe |
 | Home / End | első / utolsó dia |
+| B · . | fekete képernyő (bármelyik billentyű visszahozza) |
+| P | előadói nézet külön ablakban: óra, eltelt idő, következő dia, jegyzet — innen is lapozható |
+| O | olvasható mód: a hosszabb szövegek rendes betűvel (ki-be) |
+| Ctrl+P | nyomtatás / PDF: minden dia egy oldal, minden válasz kinyitva |
 
-**Biztonsági tartalék:** az előadás napján legyen a laptopodon egy letöltött példány is. Az `eloadas/index.html` internet nélkül, dupla kattintással is fut (a betűk is helyben vannak).
+**Előadói nézet két kijelzővel:** a vetítő ablakot húzd a projektorra (F: teljes képernyő), a laptopon nyomd meg a P-t. Ha a böngésző letiltja a felugró ablakot, engedélyezd ennél az oldalnál. Jegyzetet egy diához így adhatsz: `<aside class="notes">…</aside>` a dián belül — a vetítésen nem látszik.
+
+**Hosszú válaszok:** ha egy Claude-válasz nem fér ki, a betű kissé kisebb lesz; ha így sem, bekezdések mentén részletekben jelenik meg („▼ folytatás”), és a következő gombnyomás hozza a folytatást. A szöveg nem változik.
+
+**Biztonsági tartalék:** az előadás napján legyen a laptopodon egy letöltött példány is. Az `eloadas/index.html` internet nélkül, dupla kattintással is fut (a betűk is helyben vannak). Érdemes PDF-et is menteni (Ctrl+P → Mentés PDF-ként, „Háttérgrafika” bekapcsolva): ez egy másik gépen vagy kiosztott anyagként is használható.
 
 ## Szerkesztés
 
