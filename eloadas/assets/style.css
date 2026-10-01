@@ -92,6 +92,7 @@ blockquote.dani.other::before{color:var(--sky)}
 .cover .tag,.verse .tag,.statement .tag,.divider .tag{position:absolute;top:44px;left:64px;margin:4px}
 canvas.mirror{image-rendering:pixelated;image-rendering:crisp-edges;width:312px;height:442px;flex:none}
 canvas.mirror.small{width:216px;height:306px}
+canvas.shelf{image-rendering:pixelated;image-rendering:crisp-edges;width:348px;height:420px;margin-top:34px;flex:none}
 .cover h1{font-size:40px;line-height:1.5}
 .cover .subtitle{font-size:42px;line-height:1.1;color:var(--cyan);margin:28px 0 0;max-width:720px}
 .cover .speaker{font:14px/1.6 var(--pix);color:var(--mist);margin:52px 0 0}
