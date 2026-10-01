@@ -34,6 +34,19 @@ A webre csak az `eloadas/` mappa kerül ki. A tervezet a GitHubon marad; ha a re
 2. A beállításokat a `netlify.toml` megadja (publish: `eloadas`, nincs build) — csak **Deploy**.
 3. Ezután minden GitHubra feltöltött változtatás után a Netlify magától frissíti az oldalt.
 
+## Indítás és nézetek
+
+Megnyitáskor felugrik egy ablak: **Teljes képernyő** (a böngészők csak kattintásra engedik; iPhone-on egyáltalán nem — ott fekvő helyzet ajánlott), utána a nézet:
+
+- **Dani nézet** — a vetítés: előadói nézet (P), élő kérdés (K vagy a dián lévő gomb), minden billentyű.
+- **Bibliaórai nézet** — a résztvevők saját eszközén: mindenki maga lapoz (nyilak, lapozó vagy telefonon oldalra húzás). Minden dia alján **✎ Jegyzet** gomb: jegyzet írható az adott diához, automatikusan mentődik. Ha a diához már van jegyzet, a gomb sárga, és rákattintva megnyílik. Jobbra fent: **Következő jegyzet ▶** (a szám a jegyzetek darabszáma) — a következő jegyzetes diára ugrik és megnyitja. A jegyzetablakban: **Összes letöltése** szövegfájlba.
+
+A jegyzetek csak az adott eszközön, abban a böngészőben maradnak meg (privát ablakban nem; ezt az ablak jelzi). A diasor nem szinkronizál: a résztvevők a saját tempójukban lapoznak, az élő kérdések válaszai csak Dani gépén jelennek meg.
+
+Közvetlen link a nézetválasztás nélkül: `…/?nezet=dani` vagy `…/?nezet=bibliaora` (a teljes képernyős kérdés ilyenkor is megjelenik).
+
+**Előadói nézet:** Dani nézetben nyomd meg a **P** betűt — külön ablak nyílik (óra, eltelt idő, következő dia, jegyzet, élő kérdés). Ha nem jelenik meg, a böngésző letiltotta a felugró ablakot: a címsor jobb szélén engedélyezd ennél az oldalnál, és nyomd meg újra a P-t. Két kijelzőnél ezt az ablakot hagyd a laptopon, a diasort húzd a projektorra, és ott nyomd meg az F-et.
+
 ## Előadás közben
 
 | Billentyű | Mit csinál |
@@ -61,7 +74,7 @@ A webre csak az `eloadas/` mappa kerül ki. A tervezet a GitHubon marad; ha a re
 3. A választ bemásolod a második mezőbe → „Betöltés”. A diasor az élő diára ugrik, a sárga gombon a kérdés áll.
 4. Enter (vagy a lapozó): indul a válasz. Újabb kérdésnél ugyanígy, a régi helyére kerül az új.
 
-Egy kijelzővel a **K** billentyű nyit egy panelt a diasoron belül; a beillesztett válasz szövege ott rejtve marad (csak a hossza látszik), hogy a közönség ne lássa előre. A chatből hozott „Claude:” előtagot és csillagos kiemelést a diasor magától eltávolítja.
+Egy kijelzővel a dián lévő **✎ Kérdés és válasz beírása** gomb (vagy a **K** billentyű) nyit egy ablakot ugyanezzel a két mezővel. Ez a vetítésen látszik; ha nem akarod, hogy a válasz előre látsszon, nyomd meg előbb a **B**-t (fekete képernyő), aztán a **K**-t: az ablak a fekete fölött nyílik, a betöltés után bármelyik billentyűre visszajön a kép. A chatből hozott „Claude:” előtagot és csillagos kiemelést a diasor magától eltávolítja.
 
 Ha a claude.ai-on (nem Claude Code-ban) kérdezed, egy új beszélgetés elején ezt küldd el:
 

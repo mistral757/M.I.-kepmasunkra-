@@ -45,7 +45,12 @@
     Home / End : első / utolsó dia
     B vagy . : fekete képernyő (bármelyik billentyű visszahozza)
     P : előadói nézet külön ablakban (óra, eltelt idő, következő dia, jegyzet; innen is lapozható)
-    K : élő kérdés betöltése a „Kérdezzétek Claude-ot” diára (ugyanez az előadói nézetben is)
+    K : élő kérdés beírása a „Kérdezzétek Claude-ot” diára (ugyanez a dián lévő gombbal és az előadói nézetben)
+
+  INDÍTÁS: megnyitáskor felugrik egy ablak: teljes képernyő, majd nézet (Dani / bibliaórai).
+    A bibliaórai nézetben minden diához jegyzet írható (alul: ✎ Jegyzet; jobbra fent: következő
+    jegyzet). A jegyzetek az adott eszközön, a böngészőben maradnak meg. A P és a K csak Dani
+    nézetben működik. Közvetlen link: index.html?nezet=dani  vagy  index.html?nezet=bibliaora
     O : olvasható mód — a hosszabb szövegek rendes betűvel (ki-be kapcsol)
     Ctrl+P : nyomtatás / PDF — minden dia egy oldal, minden válasz kinyitva
              (a nyomtatási ablakban: „Háttérgrafika” bekapcsolva)
@@ -922,13 +927,14 @@
 </section>
 
 <!-- ============ ÉLŐ KÉRDÉSEK ============ -->
-<!-- A kérdést és Claude válaszát előadás közben lehet betölteni: előadói nézet (P) → „Élő kérdés”,
-     vagy a K billentyű. Ide nem kell semmit írni; az alábbi kérdés csak a kiinduló felirat. -->
+<!-- A kérdést és Claude válaszát előadás közben lehet betölteni: Dani nézetben a dián lévő
+     „Kérdés és válasz beírása” gombbal, a K billentyűvel vagy az előadói nézetből (P). Ide nem kell semmit írni; az alábbi kérdés csak a kiinduló felirat. -->
 <section class="slide live" data-block="Kérdések">
   <div class="cols">
     <div class="left">
       <h2>Kérdezzétek Claude-ot</h2>
       <ul class="keys"><li>a kérdés most megy Claude-hoz</li><li>a válasz most készül</li></ul>
+      <button type="button" class="live-edit">✎ Kérdés és válasz beírása</button>
     </div>
     <div class="right">
       <div class="qa">
@@ -954,15 +960,52 @@
   <p>Diák — kattints egyre, vagy Esc a bezáráshoz</p>
   <ol></ol>
 </div>
-<div id="live" role="dialog" aria-label="Élő kérdés betöltése">
-  <p>Élő kérdés — Ctrl+Enter: betöltés, Esc: mégse</p>
-  <label for="lq">Kérdés (a sárga gombra kerül)</label>
-  <textarea id="lq" rows="2"></textarea>
-  <label for="la">Claude válasza a chatből — illeszd be</label>
-  <textarea id="la" rows="6" spellcheck="false"></textarea>
-  <p id="ls"></p>
-  <button type="button" id="lok">Betöltés</button> <button type="button" id="lno">Mégse</button>
 </div>
+
+<!-- ============ NYITÓ ABLAK ÉS BIBLIAÓRAI JEGYZETEK (ezt nem kell szerkeszteni) ============ -->
+<div id="intro" class="ovl open" role="dialog" aria-modal="true" aria-label="Indítás">
+  <div class="box" id="intro-fs">
+    <p class="ttl">A M.I. képmásunkra</p>
+    <p id="fs-msg">Váltsunk teljes képernyőre?</p>
+    <button type="button" id="fs-yes">Teljes képernyő</button>
+    <button type="button" id="fs-no" class="sec">Most nem</button>
+  </div>
+  <div class="box" id="intro-mode" hidden>
+    <p class="ttl">Melyik nézet?</p>
+    <button type="button" data-mode="dani">Dani nézet<small>vetítés és előadói eszközök</small></button>
+    <button type="button" data-mode="bibliaora">Bibliaórai nézet<small>saját lapozás és jegyzetek diánként</small></button>
+  </div>
+</div>
+<div id="live" class="ovl" role="dialog" aria-modal="true" aria-labelledby="lttl">
+  <div class="box">
+    <p class="ttl" id="lttl">Élő kérdés</p>
+    <label for="lq">Kérdés (a sárga gombra kerül)</label>
+    <textarea id="lq" rows="2"></textarea>
+    <label for="la">Claude válasza (a chatből bemásolva vagy beírva)</label>
+    <textarea id="la" rows="7" spellcheck="false"></textarea>
+    <p id="ls"></p>
+    <div class="row">
+      <button type="button" id="lok">Betöltés</button>
+      <button type="button" id="lno" class="sec">Mégse</button>
+    </div>
+  </div>
+</div>
+<div id="nbar">
+  <button type="button" id="nnext" title="Ugrás a következő jegyzetedhez">Következő jegyzet ▶ <span>0</span></button>
+  <button type="button" id="nfs" title="Teljes képernyő" aria-label="Teljes képernyő">⛶</button>
+</div>
+<button type="button" id="nbtn">✎ Jegyzet</button>
+<div id="nedit" class="ovl" role="dialog" aria-modal="true" aria-labelledby="nttl">
+  <div class="box">
+    <p class="ttl" id="nttl">Jegyzet</p>
+    <textarea id="ntext" rows="7" placeholder="Mit kérdeznél, mit jegyeznél meg ennél a diánál?"></textarea>
+    <p id="nstat"></p>
+    <div class="row">
+      <button type="button" id="nclose">Kész</button>
+      <button type="button" id="ndel" class="sec">Törlés</button>
+      <button type="button" id="nexp" class="sec">Összes letöltése</button>
+    </div>
+  </div>
 </div>
 
 <script src="assets/deck.js"></script>
