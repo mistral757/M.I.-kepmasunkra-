@@ -1,4 +1,4 @@
-/* A M.I. képmásunkra — a diák kinézete. Színpaletta: Sweetie 16 pixelpaletta. */
+/* A MI képmásunkra — a diák kinézete. Színpaletta: Sweetie 16 pixelpaletta. */
 :root{
   --ink:#1a1c2c; --night:#29366f; --slate:#333c57; --steel:#566c86; --mist:#94b0c2; --paper:#f4f4f4;
   --plum:#5d275d; --ruby:#b13e53; --ember:#ef7d57; --amber:#ffcd75;
@@ -96,6 +96,14 @@ canvas.shelf{image-rendering:pixelated;image-rendering:crisp-edges;width:348px;h
 .cover h1{font-size:40px;line-height:1.5}
 .cover .subtitle{font-size:42px;line-height:1.1;color:var(--cyan);margin:28px 0 0;max-width:720px}
 .cover .speaker{font:14px/1.6 var(--pix);color:var(--mist);margin:52px 0 0}
+.cover .qr{position:absolute;right:64px;bottom:64px;display:flex;flex-direction:column;align-items:center;gap:8px;width:200px}
+.cover .qr canvas{image-rendering:pixelated;image-rendering:crisp-edges;width:184px;height:184px;
+  box-shadow:0 -4px 0 var(--amber),0 4px 0 var(--amber),-4px 0 0 var(--amber),4px 0 0 var(--amber)}
+.cover .qr p{margin:0;text-align:center}
+.cover .qr-cap{font:11px/1.5 var(--pix);color:var(--amber);margin-top:6px!important}
+.cover .qr-url{font-size:22px;line-height:1;color:var(--mist);word-break:break-all}
+.cover .qr.missing canvas{display:none}
+.cover .qr.missing .qr-cap{color:var(--mist)}
 .verse blockquote{margin:0;font-size:46px;line-height:1.12;color:var(--paper);max-width:760px}
 .verse cite{display:block;margin-top:26px;font:14px/1 var(--pix);color:var(--amber);font-style:normal}
 
@@ -120,20 +128,52 @@ canvas.shelf{image-rendering:pixelated;image-rendering:crisp-edges;width:348px;h
 /* előadói jegyzet: csak az előadói nézetben (P) látszik */
 aside.notes{display:none}
 
-/* élő kérdés panel (K) — a válasz szövege rejtve, hogy a vetítésen ne látsszon előre */
-#live{position:absolute;inset:60px 160px 90px;z-index:65;background:var(--ink);padding:24px 32px;display:none;flex-direction:column;
+/* élő kérdés ablak (K vagy a dián lévő gomb) — a közös .ovl stílust használja */
+#live label{font:20px/1.1 var(--type);color:var(--mist);margin-bottom:-8px}
+#live #ls{font-size:19px;color:var(--cyan)}
+.live-edit{align-self:flex-start;margin-top:28px;font:13px/1.4 var(--pix);background:var(--slate);color:var(--paper);border:0;padding:12px 14px;cursor:pointer}
+body.mode-bibliaora .live-edit{display:none}
+
+/* felugró ablakok (nyitó ablak, jegyzet, élő kérdés) — a skálázott vásznon kívül, hogy telefonon is olvashatók legyenek */
+.ovl{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(15,16,32,.86)}
+.ovl.open{display:flex}
+.ovl .box{width:min(560px,100%);max-height:100%;overflow:auto;background:var(--ink);padding:26px 28px;display:flex;flex-direction:column;gap:14px;
   box-shadow:0 -4px 0 var(--amber),0 4px 0 var(--amber),-4px 0 0 var(--amber),4px 0 0 var(--amber)}
-#live.open{display:flex}
-#live p{font:12px/1.6 var(--pix);color:var(--amber);margin:0 0 14px}
-#live label{font-size:24px;color:var(--mist)}
-#live textarea{font:24px/1.15 var(--type);background:#10121f;color:var(--paper);border:0;padding:8px 12px;margin:4px 0 14px;resize:none;
+.ovl .box[hidden]{display:none}
+.ovl .ttl{font:16px/1.5 var(--pix);color:var(--amber);margin:0}
+.ovl p{font:24px/1.15 var(--type);color:var(--paper);margin:0}
+.ovl button{font:14px/1.4 var(--pix);text-align:left;background:var(--amber);color:var(--ink);border:0;padding:14px 16px;cursor:pointer}
+.ovl button small{display:block;font:20px/1.1 var(--type);margin-top:6px;color:var(--slate)}
+.ovl button.sec{background:var(--slate);color:var(--mist)}
+.ovl button:focus-visible{outline:4px dashed var(--cyan);outline-offset:4px}
+.ovl textarea{font:22px/1.2 var(--type);background:#10121f;color:var(--paper);border:0;padding:10px 12px;resize:vertical;min-height:150px;
   box-shadow:0 0 0 4px var(--sea)}
-#live #la{color:transparent;caret-color:var(--cyan)}
-#live #la::selection{background:transparent}
-#live #ls{font:22px/1.2 var(--type);color:var(--cyan)}
-#live button{align-self:flex-start;font:13px/1 var(--pix);background:var(--amber);color:var(--ink);border:0;padding:12px 16px;margin-right:12px;cursor:pointer}
-#live #lno{background:var(--slate);color:var(--mist)}
-#live > button{display:inline-block}
+#live textarea#lq{min-height:60px}
+#nstat{font-size:19px;color:var(--mist)}
+.ovl .row{display:flex;flex-wrap:wrap;gap:10px}
+
+/* bibliaórai nézet: jegyzetgombok (csak ott látszanak) */
+#nbar,#nbtn{display:none}
+body.mode-bibliaora #nbar{display:flex;position:fixed;top:10px;right:10px;z-index:90;gap:8px}
+body.mode-bibliaora #nbtn{display:block;position:fixed;bottom:10px;left:50%;transform:translateX(-50%);z-index:90}
+#nbar button,#nbtn{font:12px/1.2 var(--pix);background:var(--slate);color:var(--paper);border:0;padding:10px 12px;cursor:pointer;opacity:.92}
+#nbar button span{color:var(--amber)}
+#nbar button[disabled]{opacity:.45;cursor:default}
+#nbtn.has{background:var(--amber);color:var(--ink)}
+#nfs{font-family:'Segoe UI',Arial,sans-serif!important;font-size:18px!important;line-height:1!important}
+/* alacsony képernyő (telefon fekve): tömörebb ablakok */
+@media (max-height:520px){
+  .ovl{align-items:flex-start;padding:8px}
+  .ovl .box{padding:14px 16px;gap:8px}
+  .ovl .ttl{font-size:12px}
+  .ovl p,.ovl textarea{font-size:19px}
+  .ovl textarea{min-height:90px;height:34vh}
+  #live textarea#lq{min-height:44px;height:auto}
+  .ovl button{font-size:11px;padding:10px 12px}
+  .ovl button small{font-size:17px}
+  #nstat{font-size:16px}
+  #nbar button,#nbtn{font-size:10px;padding:8px 10px}
+}
 
 /* fekete képernyő (B) */
 #blank{position:absolute;inset:0;z-index:80;background:#000;display:none}
@@ -158,7 +198,7 @@ body.readable .statement .sub,body.readable .divider .sub,body.readable .cover .
 @media print{
   html,body{height:auto;overflow:visible;background:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
   #stage{position:static;transform:none!important;width:1280px;height:auto;overflow:visible}
-  #stage::after,#hud,#menu,#blank,#live,.ask,.term{display:none!important}
+  #stage::after,#hud,#menu,#blank,.live-edit,.ovl,#nbar,#nbtn,.ask,.term{display:none!important}
   .slide{position:relative;display:flex!important;width:1280px;height:720px;overflow:hidden;break-after:page;page-break-after:always;background:var(--ink)}
   .step{opacity:1}
   .step.shown{animation:none}

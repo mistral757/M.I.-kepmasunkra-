@@ -1,7 +1,8 @@
-/* A M.I. képmásunkra — a diák működése (lapozás, lépésenkénti megjelenítés, gépelés). */
+/* A MI képmásunkra — a diák működése (lapozás, lépésenkénti megjelenítés, gépelés). */
 /* ===== BEÁLLÍTÁSOK ===== */
 const GEPELES_MS = 24;                 // gépelési sebesség: ennyi ezredmásodperc betűnként (kisebb = gyorsabb)
 const TOVABB_ELOBB_A_DIAN_BELUL = true; // true: a → / lapozó előbb a dián lévő kérdést, címszót indítja
+const WEBCIM = '';                     // a weblap címe a címlapi QR-kódhoz, pl. 'https://valami.netlify.app/' — üresen: a jelenlegi cím (ha weben nyitották meg)
 const VALASZ_MIN_BETUMERET = 26;       // ha egy válasz nem fér ki, a betű eddig (px) kisebbedhet; ha így sem fér ki, részletekben jelenik meg
 
 /* ===== innentől nem kell szerkeszteni ===== */
@@ -13,10 +14,16 @@ const menu = document.getElementById('menu');
 let cur = 0, typing = null;
 
 function fit(){
-  const s = Math.min(innerWidth / 1280, innerHeight / 720);
+  const vv = window.visualViewport;                       // telefonon a böngészősáv miatt változik
+  const w = vv ? vv.width : document.documentElement.clientWidth || innerWidth;
+  const h = vv ? vv.height : document.documentElement.clientHeight || innerHeight;
+  const s = Math.min(w / 1280, h / 720);
   stage.style.transform = `translate(-50%,-50%) scale(${s})`;
 }
-addEventListener('resize', fit); fit();
+addEventListener('resize', fit); addEventListener('orientationchange', () => setTimeout(fit, 200));
+window.visualViewport?.addEventListener('resize', fit);
+document.addEventListener('fullscreenchange', fit); document.addEventListener('webkitfullscreenchange', fit);
+addEventListener('load', fit); fit();
 
 /* pixeltükör: homályos (dithered) vagy tiszta tükörkép */
 function drawMirror(cv, dim){
@@ -66,6 +73,31 @@ function drawShelf(cv){
   }
 }
 document.querySelectorAll('canvas.shelf').forEach(drawShelf);
+
+/* QR-kód a címlapon: a weblapra mutat, bibliaórai nézettel (qrcode.js: Kazuhiko Arase, MIT) */
+function siteUrl(){
+  if (WEBCIM) return WEBCIM;
+  if (/^https?:$/.test(location.protocol)) return location.origin + location.pathname.replace(/index\.html$/, '');
+  return '';
+}
+function drawQR(cv){
+  const box = cv.closest('.qr'), base = siteUrl();
+  if (!base || typeof qrcode !== 'function'){
+    box.classList.add('missing');
+    box.querySelector('.qr-cap').textContent = 'QR-kód: add meg a webcímet (deck.js, WEBCIM)';
+    return;
+  }
+  const target = base + (base.includes('?') ? '&' : '?') + 'nezet=bibliaora';
+  const q = qrcode(0, 'M'); q.addData(target); q.make();
+  const n = q.getModuleCount(), quiet = 2, W = n + quiet * 2;
+  cv.width = W; cv.height = W;
+  const g = cv.getContext('2d');
+  g.fillStyle = '#f4f4f4'; g.fillRect(0, 0, W, W);
+  g.fillStyle = '#1a1c2c';
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) g.fillRect(c + quiet, r + quiet, 1, 1);
+  box.querySelector('.qr-url').textContent = base.replace(/^https?:\/\//, '').replace(/\/$/, '');
+}
+document.querySelectorAll('canvas.qr-code').forEach(drawQR);
 
 /* diák előkészítése */
 slides.forEach(sl => {
@@ -247,6 +279,7 @@ function go(i){
   history.replaceState(null, '', '#' + (cur + 1));
   slides[cur].querySelectorAll('.qa.started').forEach(qa => { if (qa._mode !== readableMode()) relayoutQA(qa); });
   updatePresenter();
+  updateNotes();
 }
 function next(){ if (TOVABB_ELOBB_A_DIAN_BELUL && act()) return; go(cur + 1); }
 function prev(){ go(cur - 1); }
@@ -377,8 +410,8 @@ function toggleLive(open){
 function liveStats(){
   const t = livePanel.querySelector('#la').value, n = parseAnswer(t);
   livePanel.querySelector('#ls').textContent = t.trim()
-    ? `Beillesztve: ${t.trim().length} karakter, ${n.length} bekezdés (a szöveg itt rejtve marad).`
-    : 'A válasz szövege itt rejtve marad, hogy a vetítésen ne látsszon előre.';
+    ? `${t.trim().length} karakter, ${n.length} bekezdés. Betöltés után Enter (vagy a lapozó): indul a válasz.`
+    : 'Ctrl+Enter: betöltés, Esc: mégse.';
 }
 if (livePanel){
   const lq = livePanel.querySelector('#lq'), la = livePanel.querySelector('#la');
@@ -386,6 +419,8 @@ if (livePanel){
   la.addEventListener('input', liveStats);
   livePanel.querySelector('#lok').addEventListener('click', submit);
   livePanel.querySelector('#lno').addEventListener('click', () => toggleLive(false));
+  stage.querySelectorAll('.live-edit').forEach(b => b.addEventListener('click', () => { b.blur(); toggleLive(true); }));
+  livePanel.addEventListener('click', e => { if (e.target === livePanel) toggleLive(false); });
   livePanel.addEventListener('keydown', e => {
     if (e.key === 'Escape'){ e.preventDefault(); toggleLive(false); }
     else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)){ e.preventDefault(); submit(); }
@@ -416,12 +451,14 @@ count.addEventListener('click', () => toggleMenu(true));
 function onKey(e){
   if (e.target && e.target.closest && e.target.closest('textarea, input')) return; // gépelés a mezőkben
   if (livePanel && livePanel.classList.contains('open')) return;
+  if (intro.classList.contains('open') || noteEdit.classList.contains('open')) return; // a felugró ablakok kezelik
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (menu.classList.contains('open')){
     if (e.key === 'Escape' || e.key === 'm' || e.key === 'M'){ e.preventDefault(); toggleMenu(false); }
     return;
   }
   if (blank.classList.contains('on')){
+    if ((e.key === 'k' || e.key === 'K') && mode === 'dani'){ e.preventDefault(); toggleLive(true); return; } // a fekete marad
     if (!['Shift', 'Control', 'Alt', 'Meta'].includes(e.key)){ e.preventDefault(); toggleBlank(false); }
     return;
   }
@@ -437,16 +474,137 @@ function onKey(e){
     case 'r': case 'R': e.preventDefault(); resetSlide(); break;
     case 'f': case 'F':
       e.preventDefault();
-      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
-      else document.exitFullscreen?.();
+      toggleFullscreen();
       break;
     case 'b': case 'B': case '.': e.preventDefault(); toggleBlank(true); break;
     case 'o': case 'O': e.preventDefault(); toggleReadable(); break;
-    case 'p': case 'P': e.preventDefault(); openPresenter(); break;
-    case 'k': case 'K': e.preventDefault(); toggleLive(true); break;
+    case 'p': case 'P': if (mode === 'dani'){ e.preventDefault(); openPresenter(); } break;
+    case 'k': case 'K': if (mode === 'dani'){ e.preventDefault(); toggleLive(true); } break;
   }
 }
 addEventListener('keydown', onKey);
+
+/* ===== teljes képernyő ===== */
+const fsSupported = () => !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement;
+function enterFullscreen(){
+  const el = document.documentElement;
+  try { (el.requestFullscreen || el.webkitRequestFullscreen)?.call(el)?.catch?.(() => {}); } catch (_) {}
+}
+function toggleFullscreen(){
+  if (fsElement()){ try { (document.exitFullscreen || document.webkitExitFullscreen)?.call(document); } catch (_) {} }
+  else enterFullscreen();
+}
+
+/* ===== nyitó ablak: teljes képernyő, majd nézet választása =====
+   A böngészők csak kattintásra engednek teljes képernyőt, ezért ez az első lépés.
+   ?nezet=dani vagy ?nezet=bibliaora a címben: a nézetválasztás elmarad. */
+const intro = document.getElementById('intro');
+let mode = 'dani';
+function setMode(m){
+  mode = m === 'bibliaora' ? 'bibliaora' : 'dani';
+  document.body.classList.toggle('mode-bibliaora', mode === 'bibliaora');
+  intro.classList.remove('open');
+  updateNotes();
+}
+(function setupIntro(){
+  const fsBox = document.getElementById('intro-fs'), modeBox = document.getElementById('intro-mode');
+  const preset = new URLSearchParams(location.search).get('nezet');
+  const toMode = () => {
+    if (preset){ setMode(preset); return; }
+    fsBox.hidden = true; modeBox.hidden = false; modeBox.querySelector('button').focus();
+  };
+  if (!fsSupported()){
+    document.getElementById('fs-msg').textContent = 'Ezen az eszközön a böngésző nem enged teljes képernyőt. Telefonon fordítsd fekvőbe a készüléket.';
+    document.getElementById('fs-yes').hidden = true;
+    document.getElementById('fs-no').textContent = 'Tovább';
+  }
+  document.getElementById('fs-yes').addEventListener('click', () => { enterFullscreen(); toMode(); });
+  document.getElementById('fs-no').addEventListener('click', toMode);
+  modeBox.querySelectorAll('button[data-mode]').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+  intro.addEventListener('keydown', e => { if (e.key === 'Escape'){ e.preventDefault(); toMode(); } });
+  (fsSupported() ? document.getElementById('fs-yes') : document.getElementById('fs-no')).focus();
+})();
+
+/* ===== bibliaórai nézet: jegyzetek diánként =====
+   A jegyzetek ebben a böngészőben, ezen az eszközön maradnak meg (localStorage). */
+const NOTES_KEY = 'mi-kepmasunkra-jegyzetek-v1';
+const slideKeys = (() => { const seen = {}; return slides.map((sl, i) => {
+  const k = slideTitle(sl) || 'Dia ' + (i + 1); seen[k] = (seen[k] || 0) + 1; return seen[k] > 1 ? k + ' #' + seen[k] : k; }); })();
+let notes = {}, notesPersist = true;
+try { notes = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}') || {}; } catch (_) { notesPersist = false; notes = {}; }
+function saveNotes(){
+  try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); notesPersist = true; } catch (_) { notesPersist = false; }
+}
+const noteOf = i => (notes[slideKeys[i]] && notes[slideKeys[i]].text || '').trim();
+const noteBtn = document.getElementById('nbtn'), noteNext = document.getElementById('nnext');
+const noteEdit = document.getElementById('nedit'), noteText = document.getElementById('ntext');
+function noteIndexes(){ return slides.map((_, i) => i).filter(i => noteOf(i)); }
+function updateNotes(){
+  if (!noteBtn) return;
+  const has = !!noteOf(cur), all = noteIndexes();
+  noteBtn.textContent = has ? '✎ Jegyzeted ehhez a diához' : '✎ Jegyzet';
+  noteBtn.classList.toggle('has', has);
+  noteNext.querySelector('span').textContent = all.length;
+  noteNext.disabled = !all.length || (all.length === 1 && all[0] === cur);
+}
+function openNote(){
+  document.getElementById('nttl').textContent = (cur + 1) + '. dia — ' + slideKeys[cur];
+  noteText.value = noteOf(cur);
+  noteEdit.classList.add('open');
+  noteStatus();
+  noteText.focus();
+}
+function noteStatus(){
+  const n = noteIndexes().length;
+  document.getElementById('nstat').textContent = notesPersist
+    ? `Automatikusan mentve, csak ezen az eszközön, ebben a böngészőben. Jegyzetek összesen: ${n}.`
+    : 'Figyelem: ez a böngésző nem engedi a mentést (pl. privát ablak) — a jegyzet az oldal bezárásával elvész. Töltsd le!';
+}
+function storeNote(){
+  const t = noteText.value.trim(), k = slideKeys[cur];
+  if (t) notes[k] = { text: t, dia: cur + 1, ido: new Date().toISOString() }; else delete notes[k];
+  saveNotes(); updateNotes(); noteStatus();
+}
+function closeNote(){ storeNote(); noteEdit.classList.remove('open'); noteText.blur(); }
+function nextNote(){
+  const all = noteIndexes(); if (!all.length) return;
+  const target = all.find(i => i > cur) ?? all[0];
+  go(target); openNote();
+}
+function exportNotes(){
+  const lines = noteIndexes().map(i => `${i + 1}. dia — ${slideKeys[i]}\n${noteOf(i)}\n`);
+  const text = 'A MI képmásunkra — jegyzeteim\n\n' + (lines.join('\n') || '(nincs jegyzet)\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
+  a.download = 'jegyzeteim-mi-kepmasunkra.txt'; document.body.append(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+if (noteBtn){
+  let timer = null;
+  noteBtn.addEventListener('click', openNote);
+  noteNext.addEventListener('click', nextNote);
+  document.getElementById('nfs').addEventListener('click', toggleFullscreen);
+  noteText.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(storeNote, 400); });
+  document.getElementById('nclose').addEventListener('click', closeNote);
+  document.getElementById('ndel').addEventListener('click', () => { noteText.value = ''; storeNote(); closeNote(); });
+  document.getElementById('nexp').addEventListener('click', () => { storeNote(); exportNotes(); });
+  noteEdit.addEventListener('keydown', e => { if (e.key === 'Escape'){ e.preventDefault(); closeNote(); } });
+  noteEdit.addEventListener('click', e => { if (e.target === noteEdit) closeNote(); });
+  addEventListener('pagehide', () => { if (noteEdit.classList.contains('open')) storeNote(); });
+}
+
+/* lapozás húzással (telefonon, táblagépen) */
+let touch = null;
+stage.addEventListener('touchstart', e => {
+  if (e.touches.length !== 1 || e.target.closest('.term, button, textarea')) { touch = null; return; }
+  touch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+}, { passive: true });
+stage.addEventListener('touchend', e => {
+  if (!touch) return;
+  const dx = e.changedTouches[0].clientX - touch.x, dy = e.changedTouches[0].clientY - touch.y; touch = null;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) (dx < 0 ? next : prev)();
+}, { passive: true });
 
 const start = parseInt(location.hash.slice(1), 10);
 slides.forEach(s => s.classList.remove('active'));

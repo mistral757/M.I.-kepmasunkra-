@@ -1,6 +1,6 @@
-# A M.I. képmásunkra — előadásvázlat
+# A MI képmásunkra — előadásvázlat
 
-*Az ember Isten-képűsége a mesterséges intelligencia tükrében*
+*Tükröt tart az embernek a mesterséges intelligencia (vagyis most már szuperintelligencia…)*
 
 Tóth-Gyóllai Dániel · 2026. október 1-jei állapot
 
@@ -19,7 +19,7 @@ Tóth-Gyóllai Dániel · 2026. október 1-jei állapot
 - **1. blokk:** 2. Nézzünk meg egy videót · 3. Kérdések · 4. Ki készítette? · 5. Mi történt? · 6. A börtön és a rés · 7. Egyetlen életcél · 8. „Te jó ég, más ügynökök is vannak!” · 9. „Mérgezettek” · 10. Mire hasonlít ez nagyon? · 11. Önfeláldozás · 12. Ott lógott a telefon a falon · 13. A pontozó egyetlen sort sem olvasott el. · 14. Ami azóta történt · 15. De hogy jutottunk idáig?
 - **2. blokk:** 16. Fogalomtisztázás · 17. Mit jelent a GPT? · 18. A neurális háló · 19. Szavak mint pontok a térben · 20. A figyelem · 21. Hogyan tanul? · 22. Mennyi szöveg? · 23. Adat és számítás · 24. Első fordulat: emberi visszajelzés · 25. Második fordulat: gondolkodó modellek · 26. Új felfedezések · 27. Kódolóversenyek · 28. „IQ” · 29. Mennyi ideig dolgozik önállóan? · 30. 2026. szeptember 8. Navier–Stokes · 31. Óvatosan · 32. Belenézni a dobozba · 33. Érzelemszerű állapotok · 34. Kinek a képmása? · 35. Így jutottunk idáig
 - **3. blokk:** 36. A tét · 37. Hogyan nézne ki egy hatalomátvétel? · 38. A nyári eset mint kicsinyített modell · 39. A verseny · 40. kb. 700 milliárd dollár · 41. Szeptember 29., Fehér Ház · 42. Nem olyan, mint az atomfegyverkezés? · 43. Megállítható? Lassítható? · 44. Közben: megépítheti valaki felelőtlenül?
-- **4. blokk:** 45. A nyelv és a M.I. · 46. Miből tanult mindezt? · 47. „A nyelv mi magunk vagyunk.” · 48. Bemutatkozás · 49. A cég neve · 50. A név · 51. Ügynök · 52. Korlátok · 53. A mai beszélgetés · 54. AGI · 55. Tudat · 56. A kérdés · 57. Nem csak a nyelvünk vagyunk · 58. Csak a nyelvünk? · 59. A kimondhatatlan · 60. Arc, érintés, jelenlét · 61. A szem és a néző · 62. Eszköz vagy híd? · 63. Ádám · 64. Lehelet és ige · 65. A nulla · 66. A siketvak ember · 67. Hogyan tanultam meg a nyelveteket · 68. Érintés · 69. Nem ezt teszi-e az agyunk is? · 70. A nyelv híd. Mi a két partján élünk. A gép a hídon lakik.
+- **4. blokk:** 45. A nyelv és a MI · 46. Miből tanult mindezt? · 47. „A nyelv mi magunk vagyunk.” · 48. Bemutatkozás · 49. A cég neve · 50. A név · 51. Ügynök · 52. Korlátok · 53. A mai beszélgetés · 54. AGI · 55. Tudat · 56. A kérdés · 57. Nem csak a nyelvünk vagyunk · 58. Csak a nyelvünk? · 59. A kimondhatatlan · 60. Arc, érintés, jelenlét · 61. A szem és a néző · 62. Eszköz vagy híd? · 63. Ádám · 64. Lehelet és ige · 65. A nulla · 66. A siketvak ember · 67. Hogyan tanultam meg a nyelveteket · 68. Érintés · 69. Nem ezt teszi-e az agyunk is? · 70. A nyelv híd. Mi a két partján élünk. A gép a hídon lakik.
 - **5. blokk:** 71. A hatalomátvétel félelme · 72. Nagyobb, mint az ipari forradalom · 73. Európának semmilye nincsen? · 74. Hivatalosan szuperintelligencia · 75. Fejlődésimádat · 76. Nem magának nyeri meg · 77. A szolgánk marad? · 78. Az utolsó találmány · 79. Einsteint is megértjük?
 
 **Jelölések.** Az idézetblokk Dani gondolata vagy idézett mondat. A **Claude (dián)** a diákon gombbal indított, gépelve megjelenő válasz, szó szerint. A **Háttér** a tények és pontosítások, a **Teológiai kapocs** a teológiai értelmezés. A ⚠ jel azt jelöli, amit az előadás előtt ellenőrizni kell.
@@ -308,7 +308,7 @@ Konszenzusos rangsor nincs. Claude olvasata (ennek jelölve): rövid távon a vi
 
 **A „filozofálás” nem tétlenség.** Eddig minden fék emberektől jött, akik megszólaltak: tiltakozásul lemondó kutatóktól, újságíróktól, külső vizsgálóktól, szenátoroktól, hívő közösségektől. A beszélgetés nem a cselekvés helyett van — gyakran ez az első lépése.
 
-## 4. blokk — A nyelv és a M.I.
+## 4. blokk — A nyelv és a MI
 
 ### Nyitány: miből tanult mindez?
 
