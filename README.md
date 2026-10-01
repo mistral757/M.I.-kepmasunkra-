@@ -50,8 +50,22 @@ A webre csak az `eloadas/` mappa kerül ki. A tervezet a GitHubon marad; ha a re
 | P | előadói nézet külön ablakban: óra, eltelt idő, következő dia, jegyzet — innen is lapozható |
 | O | olvasható mód: a hosszabb szövegek rendes betűvel (ki-be) |
 | Ctrl+P | nyomtatás / PDF: minden dia egy oldal, minden válasz kinyitva |
+| K | élő kérdés betöltése (egy kijelzős módban; két kijelzővel az előadói nézetből) |
 
 **Előadói nézet két kijelzővel:** a vetítő ablakot húzd a projektorra (F: teljes képernyő), a laptopon nyomd meg a P-t. Ha a böngésző letiltja a felugró ablakot, engedélyezd ennél az oldalnál. Jegyzetet egy diához így adhatsz: `<aside class="notes">…</aside>` a dián belül — a vetítésen nem látszik.
+
+**Élő kérdések a végén („Kérdezzétek Claude-ot” dia):** a teremből érkező kérdést beírod Claude-nak egy chatbe, a választ bemásolod a diasorba, és ott a megszokott gépelő animációval fut le. A fájlt nem kell szerkeszteni:
+
+1. Két kijelzővel: a projektoron a diasor (F), a laptopon az előadói nézet (P) és a Claude-chat.
+2. A kérdést leírod a chatbe („ÉLŐ:” előtaggal), és közben a kérdést már beírhatod az előadói nézet „Élő kérdés” mezőjébe.
+3. A választ bemásolod a második mezőbe → „Betöltés”. A diasor az élő diára ugrik, a sárga gombon a kérdés áll.
+4. Enter (vagy a lapozó): indul a válasz. Újabb kérdésnél ugyanígy, a régi helyére kerül az új.
+
+Egy kijelzővel a **K** billentyű nyit egy panelt a diasoron belül; a beillesztett válasz szövege ott rejtve marad (csak a hossza látszik), hogy a közönség ne lássa előre. A chatből hozott „Claude:” előtagot és csillagos kiemelést a diasor magától eltávolítja.
+
+Ha a claude.ai-on (nem Claude Code-ban) kérdezed, egy új beszélgetés elején ezt küldd el:
+
+> Egy gyülekezeti előadás végén élő kérdéseket kapsz a közönségtől, „ÉLŐ:” előtaggal. A válaszodat szó szerint kivetítem. Csak a vetítendő szöveget írd: magyarul, első személyben, 2–3 rövid bekezdésben, üres sorral elválasztva, összesen kb. 350–550 karakterben, címsor, felsorolás és kiemelés nélkül. Légy tudományos, tanító és távolságtartó. Keresztyén tartalmat a hagyomány leírásaként közölj, ne hitvallásként. A tudat kérdésében mondd: nem tudod. Ahol releváns, mondd ki, hogy az Anthropic modellje vagy, és az Anthropic a verseny szereplője. Személyt ne minősíts. Ha a kérdés érthetetlen, egyetlen sorban kérdezz vissza „[Daninak]” előtaggal.
 
 **Hosszú válaszok:** ha egy Claude-válasz nem fér ki, a betű kissé kisebb lesz; ha így sem, bekezdések mentén részletekben jelenik meg („▼ folytatás”), és a következő gombnyomás hozza a folytatást. A szöveg nem változik.
 

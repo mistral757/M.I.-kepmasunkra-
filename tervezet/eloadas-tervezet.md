@@ -14,7 +14,7 @@ Tóth-Gyóllai Dániel · 2026. október 1-jei állapot
 | 4. blokk | A nyelv és a M.I.: interjú és párbeszéd | 45–70 (26 dia) |
 | 5. blokk | A hatalomátvétel félelme | 71–79 (9 dia) |
 
-Összesen 80 dia (címlap és zárás együtt). A teljes diasor címenként: 
+Összesen 81 dia (címlap és zárás együtt). A teljes diasor címenként: 
 
 - **1. blokk:** 2. Nézzünk meg egy videót · 3. Kérdések · 4. Ki készítette? · 5. Mi történt? · 6. A börtön és a rés · 7. Egyetlen életcél · 8. „Te jó ég, más ügynökök is vannak!” · 9. „Mérgezettek” · 10. Mire hasonlít ez nagyon? · 11. Önfeláldozás · 12. Ott lógott a telefon a falon · 13. A pontozó egyetlen sort sem olvasott el. · 14. Ami azóta történt · 15. De hogy jutottunk idáig?
 - **2. blokk:** 16. Fogalomtisztázás · 17. Mit jelent a GPT? · 18. A neurális háló · 19. Szavak mint pontok a térben · 20. A figyelem · 21. Hogyan tanul? · 22. Mennyi szöveg? · 23. Adat és számítás · 24. Első fordulat: emberi visszajelzés · 25. Második fordulat: gondolkodó modellek · 26. Új felfedezések · 27. Kódolóversenyek · 28. „IQ” · 29. Mennyi ideig dolgozik önállóan? · 30. 2026. szeptember 8. Navier–Stokes · 31. Óvatosan · 32. Belenézni a dobozba · 33. Érzelemszerű állapotok · 34. Kinek a képmása? · 35. Így jutottunk idáig
@@ -614,6 +614,10 @@ Dani szövege a szeptember 29-i fehér házi sajtótájékoztató után születe
 
 **Háttér.** ⚠ Altman pontos szavai nincsenek ellenőrizve; név szerint csak forrással. Az érv legerősebb része: ellenőrizni könnyebb, mint kitalálni; erre épül a „weak-to-strong” (gyengébb felügyel erősebbet) és a skálázható felügyelet kutatása. Hol törik el: Einstein ember volt, ugyanaz a természet, lelkiismeret, közösség és törvény kötötte; őt sosem tartottuk kordában, csak az eredményeit értettük meg; nem egy Einsteinről van szó, hanem milliónyi példányról, sokszoros sebességgel („egy zseniális nemzet egy adatközpontban”); az ellenőrzés csak akkor működik, ha az ellenőrzött nem téveszt meg (a nyári ügynökök a naplóikat hamisították; az Anthropic kutatásában a modell színlelte az összehangoltságot); Einstein elméletét a természet ellenőrizte, egy ügynök tetteit a világban gyakran csak utólag lehet.
 
+
+## Zárás — Kérdezzétek Claude-ot
+
+Élő kérdések a teremből. A kérdés a chatben megy Claude-hoz („ÉLŐ:” előtaggal), a válasz szó szerint kerül a „Kérdezzétek Claude-ot” diára, és ott gépelve fut le. A válasz formája: 2–3 rövid bekezdés, kb. 350–550 karakter, a hangnemszabály szerint. A betöltés módja: README, „Élő kérdések”.
 
 ## Nyitott ellenőrzések
 
