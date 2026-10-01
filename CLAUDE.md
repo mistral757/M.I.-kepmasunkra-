@@ -1,0 +1,56 @@
+# CLAUDE.md — munkautasítás
+
+Ez a repó Tóth-Gyóllai Dániel (Dani) előadásának anyaga: **„A M.I. képmásunkra. Az ember Isten-képűsége a mesterséges intelligencia tükrében.”** Református gyülekezeti közönségnek, nem szakmai hallgatóságnak szól.
+
+## Nyelv és munkamód
+
+- A munka nyelve **magyar**.
+- **Előbb javaslat, utána végrehajtás.** Nagyobb átírás előtt írd le röviden, mit változtatnál, és várd meg Dani jóváhagyását.
+- **Minimális beavatkozás**, a szerző hangjának megőrzése. Dani szövegét (a `data-who="Dani"` idézeteket és a tervezetben az ő gondolatait) ne írd át, csak ha kéri.
+- **Filológiai pontosság.** Idézetnél forrás; ami nincs ellenőrizve, azt jelöld („ellenőrizd”). Ne állíts magabiztosan olyat, amit nem tudsz.
+- A pontosítás és az ellenvetés kívánatos; a hízelgés nem.
+
+## Fájlok
+
+- `eloadas/index.html` — a diák. Minden dia egy `<section class="slide">`. Minták a fájl elején.
+- `eloadas/assets/style.css`, `deck.js`, `fonts.css`, `fonts/` — kinézet és működés; ritkán kell hozzányúlni.
+- `tervezet/eloadas-tervezet.md` — a hosszú tervezet, a diák forrása. Ha egy dia tartalma változik, nézd meg, kell-e a tervezetet is igazítani (és fordítva).
+- Nincs build-lépés. Ellenőrzés: az `eloadas/index.html` megnyitása böngészőben.
+
+## Az előadás íve
+
+1. blokk — videó, kérdések, esettörténet (OpenAI–Hugging Face-incidens) → „De hogy jutottunk idáig?”
+2. blokk — hogyan működik egy nyelvi modell (GPT, neurális háló, tanítás, adat, két fordulat, képességek, Navier–Stokes), ügynök, lendkerék, fekete doboz, jellem
+2/b. blokk — a tét: hatalomátvétel, verseny, szeptember 29-i fehér házi megállapodás, megállíthatóság
+3. blokk — „A nyelv mi magunk vagyunk” (Lubinski csak itt!), Claude-interjú, párbeszéd Dani gondolataival, a hatalomátvétel félelme
+4. blokk — dilemmák (elhagyható)
+5. blokk — két tekintet (a pontozó és Isten), arc és kert, zárás
+
+## Hangnemszabály a Claude-szövegekre (fontos)
+
+A diákon gombbal indított, gépelve megjelenő válaszok (`.qa .a`) Claude felolvasott szövegei. Ezek legyenek **tudományosak, tanítók, távolságtartók**:
+
+- ne simuljanak bele Dani gondolatmenetébe; pontosítsanak, ahol kell;
+- keresztyén tartalmat a hagyomány leírásaként közöljenek („a keresztyén teológia szerint…”, „ez hitbeli állítás, nem tudományos”), ne hívő beszédként;
+- a teológiai értelmezés Dani anyaga (a tervezetben *Kiegészítés* / *Teológiai kapocs* / *Teológiai értelmezés (neked)*);
+- Claude érintettségét (az Anthropic modellje; az Anthropic a verseny szereplője) ahol releváns, mondják ki;
+- a tudat kérdésében: „nem tudom” — se azt ne állítsa, hogy van, se azt, hogy biztosan nincs.
+
+Személyeket (pl. politikusokat) ne minősítsen; a gondolkodásmódot lehet megnevezni.
+
+## Tipográfia
+
+- Magyar idézőjel: „…” és belső »…«. Gondolatjel: –, illetve —.
+- Nem törő kötőjel, ahol a sortörés zavarna: `GDP&#8209;jének`.
+- Számok: ezres tagolás szóközzel (10 000), tizedesvessző.
+- A címszavak rövidek; a diák nem felolvasásra, hanem szabad előadásra szolgálnak.
+
+## Nyitott ellenőrzések (2026. október 1-jei állapot)
+
+- Igeidézetek fordítása (Károli, emlékezetből): 1Kor 13,12; Zsolt 8,5; és a többi szó szerinti igehely — Dani saját kiadásával összevetni.
+- Onkelosz-targum, 1Móz 2,7: „beszélő lélek” (*rúah memallela*) — targumkiadásban ellenőrizni.
+- Helen Keller-idézet (*The World I Live In*, 1908) — az eredetiből fordítani.
+- Trump szeptember 29-i mondatai (Dani fordítása) — a felvétellel összevetni.
+- Altman „Einstein”-érve — pontos forrás nincs meg; név szerint csak forrással.
+- „Két tekintet” blokk: Dani idézetei diktált szöveg szerkesztett átiratai — Dani ellenőrizze.
+- Gyorsan változó tények (modellnevek, versenyeredmények, szeptemberi események): az előadás előtt frissíteni.

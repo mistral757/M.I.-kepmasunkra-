@@ -1,0 +1,11 @@
+# Netlify beállítás: nincs build-lépés, csak az "eloadas" mappa kerül ki a webre.
+# A tervezet (tervezet/) és a többi fájl a GitHubon marad, nyilvánosan nem jelenik meg.
+[build]
+  publish = "eloadas"
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
