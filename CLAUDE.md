@@ -15,7 +15,9 @@ Ez a repó Tóth-Gyóllai Dániel (Dani) előadásának anyaga: **„A MI képm�
 - `eloadas/index.html` — a diák. Minden dia egy `<section class="slide">`. Minták a fájl elején.
 - `eloadas/assets/style.css`, `deck.js`, `fonts.css`, `fonts/` — kinézet és működés; ritkán kell hozzányúlni.
 - `tervezet/eloadas-tervezet.md` — a hosszú tervezet, a diák forrása. Ha egy dia tartalma változik, nézd meg, kell-e a tervezetet is igazítani (és fordítva).
-- Nincs build-lépés. Ellenőrzés: az `eloadas/index.html` megnyitása böngészőben.
+- `eloadas/vazlat.html` — a vázlat telefonos olvasója; **generált**, ne szerkeszd. A vázlat minden módosítása után: `python3 eszkozok/olvaso.py`. A vázlatban a `<!-- dia: Dia címe -->` jelölők rendelik a részeket a diákhoz (a cím pontosan a dia címe); új dia vagy átnevezés esetén a jelölőt is igazítsd.
+- `tervezet/eloadas-vazlat.docx` — a vázlat Wordben: `NODE_PATH=$(npm root -g) node eszkozok/word.js tervezet/eloadas-tervezet.md tervezet/eloadas-vazlat.docx`.
+- Egyébként nincs build-lépés. Ellenőrzés: az `eloadas/index.html` megnyitása böngészőben.
 
 ## Az előadás íve
 

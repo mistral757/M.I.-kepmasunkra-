@@ -12,6 +12,8 @@ eloadas/                  ← ez kerül ki a webre (Netlify)
   assets/fonts.css        ← betűtípusok bekötése
   assets/fonts/           ← Press Start 2P és VT323 (OFL-licenc)
   media/                  ← feliratok (SRT és böngészőhöz VTT); ide jöhet a videó
+  vazlat.html             ← a vázlat telefonos olvasója (eszkozok/olvaso.py állítja elő, ne szerkeszd)
+eszkozok/                 ← olvaso.py (telefonos olvasó), word.js (Word-változat)
 tervezet/
   eloadas-tervezet.md     ← az előadás vázlata (a diák forrása)
   eloadas-vazlat.docx     ← ugyanez Wordben, korrektúrához
@@ -48,6 +50,19 @@ Közvetlen link a nézetválasztás nélkül: `…/?nezet=dani` vagy `…/?nezet
 **QR-kód a címlapon:** a weblapra mutat, és rögtön a bibliaórai nézetet nyitja meg (`?nezet=bibliaora`). Ha a diasort a weblapról vetíted, a cím magától kerül bele. Ha helyi fájlból vetítesz, írd be a weblap címét az `eloadas/assets/deck.js` elején a `WEBCIM` sorba (pl. `const WEBCIM = 'https://valami.netlify.app/';`) — enélkül a címlapon a QR helyén ez a figyelmeztetés áll. A kódot a `assets/qrcode.js` rajzolja (Kazuhiko Arase, MIT-licenc), internet nélkül is.
 
 **Előadói nézet:** Dani nézetben nyomd meg a **P** betűt — külön ablak nyílik (óra, eltelt idő, következő dia, jegyzet, élő kérdés). Ha nem jelenik meg, a böngésző letiltotta a felugró ablakot: a címsor jobb szélén engedélyezd ennél az oldalnál, és nyomd meg újra a P-t. Két kijelzőnél ezt az ablakot hagyd a laptopon, a diasort húzd a projektorra, és ott nyomd meg az F-et.
+
+## A vázlat telefonon (`vazlat.html`)
+
+Az előadáshoz a vázlat telefonon is olvasható, ebookszerűen lapozva: `…/vazlat.html` (helyben: `eloadas/vazlat.html`).
+
+- Álló nézetre készült; lapozás oldalra húzással, a képernyő jobb / bal szélére koppintva, vagy az alsó nyilakkal.
+- A szöveg **diasorrendben** halad; minden dia új oldalon kezdődik. Felül a sáv mutatja a dia számát és címét; az új dia első oldalán sárga, „ÚJ DIA” felirattal (és ha a telefon tudja, rezeg egyet). A többi oldalon: „— folytatás”.
+- Minden dia elején egy doboz mutatja, mi van a vásznon (cím, címszavak, idézet).
+- Alul: betűméret (A− / A+), világos / sötét, ☰ tartalom (ugrás bármelyik diára). Megjegyzi a betűméretet és azt, hol tartottál.
+- Internet nélkül is működik, ha a fájl le van töltve; a Netlify-címen át a legkényelmesebb.
+- **Figyelem:** a Netlifyon ez is nyilvános cím (a keresők elől rejtve), ahogy a GitHub-repó is nyilvános.
+
+**Ha a vázlat változik**, az olvasót újra kell építeni: `python3 eszkozok/olvaso.py` (a repó gyökeréből). A vázlatban a `<!-- dia: Dia címe -->` sorok jelölik, melyik rész melyik diához tartozik; ami egy jelölő után áll, az ahhoz a diához kerül, a következő jelölőig. A címnek pontosan egyeznie kell a dia címével. A Word-változat: `NODE_PATH=$(npm root -g) node eszkozok/word.js tervezet/eloadas-tervezet.md tervezet/eloadas-vazlat.docx`.
 
 ## Előadás közben
 
