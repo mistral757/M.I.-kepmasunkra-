@@ -55,6 +55,7 @@ Közvetlen link a nézetválasztás nélkül: `…/?nezet=dani` vagy `…/?nezet
 
 Az előadáshoz a vázlat telefonon is olvasható, ebookszerűen lapozva: `…/vazlat.html` (helyben: `eloadas/vazlat.html`).
 
+- Megnyitáskor felajánlja a teljes képernyőt (alul a ⛶ gombbal később is váltható). iPhone-on a böngésző ezt nem engedi; ott: Safari → Megosztás → „Főképernyőhöz adás”, és onnan megnyitva teljes képernyőn fut.
 - Álló nézetre készült; lapozás oldalra húzással, a képernyő jobb / bal szélére koppintva, vagy az alsó nyilakkal.
 - A szöveg **diasorrendben** halad; minden dia új oldalon kezdődik. Felül a sáv mutatja a dia számát és címét; az új dia első oldalán sárga, „ÚJ DIA” felirattal (és ha a telefon tudja, rezeg egyet). A többi oldalon: „— folytatás”.
 - Minden dia elején egy doboz mutatja, mi van a vásznon (cím, címszavak, idézet).

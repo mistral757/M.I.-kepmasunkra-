@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#1a1c2c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vázlat">
 <title>Vázlat — A MI képmásunkra — előadásvázlat</title>
 <!-- EZT A FÁJLT NE SZERKESZD: az eszkozok/olvaso.py állítja elő a tervezet/eloadas-tervezet.md-ből. -->
 <link rel="stylesheet" href="assets/fonts.css">
@@ -87,6 +91,13 @@ blockquote{margin:0 0 .7em;padding:.45em .8em;border-left:4px solid var(--teol);
 #toc li button{display:flex;gap:10px;width:100%;text-align:left;border:0;background:none;color:var(--fg);font:16px/1.3 inherit;padding:9px 16px}
 #toc li button .k{flex:none;width:2.4em;color:var(--muted);font-variant-numeric:tabular-nums}
 #toc li.here button{background:var(--card);font-weight:700}
+#fsask{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(15,16,32,.9)}
+#fsask[hidden]{display:none}
+#fsask .box{width:min(420px,100%);background:var(--card);border-top:4px solid var(--accent);padding:22px 20px;display:flex;flex-direction:column;gap:12px}
+#fsask p{margin:0}
+#fsask .t{font:12px/1.5 'Press Start 2P',monospace;color:var(--accent)}
+#fsask button{font:600 17px/1.2 inherit;border:0;border-radius:6px;padding:14px;cursor:pointer;background:var(--accent);color:#1a1c2c}
+#fsask button.sec{background:var(--line);color:var(--fg)}
 #toc li.b{padding:12px 16px 4px;font:10px/1.4 'Press Start 2P',monospace;color:var(--accent2)}
 </style>
 </head>
@@ -100,9 +111,18 @@ blockquote{margin:0 0 .7em;padding:.45em .8em;border-left:4px solid var(--teol);
   <button type="button" id="bigger" aria-label="Nagyobb betű">A+</button>
   <button type="button" id="theme" aria-label="Világos / sötét">◐</button>
   <span class="grow" id="pg"></span>
+  <button type="button" id="fsbtn" aria-label="Teljes képernyő">⛶</button>
   <button type="button" id="tocbtn" aria-label="Tartalom">☰</button>
   <button type="button" class="nav" id="next" aria-label="Következő oldal">▶</button>
 </footer>
+<div id="fsask" role="dialog" aria-modal="true" aria-label="Teljes képernyő">
+  <div class="box">
+    <p class="t">Vázlat</p>
+    <p id="fsmsg">Váltsunk teljes képernyőre? Így csak a szöveg látszik.</p>
+    <button type="button" id="fsyes">Teljes képernyő</button>
+    <button type="button" id="fsno" class="sec">Most nem</button>
+  </div>
+</div>
 <div id="toc" role="dialog" aria-label="Tartalom">
   <div class="hd"><span>Ugrás diára</span><button type="button" id="tocclose">Bezár</button></div>
   <ol id="toclist"></ol>
@@ -173,6 +193,7 @@ document.getElementById('bigger').onclick = () => { fs = Math.min(32, fs + 1); s
 document.getElementById('smaller').onclick = () => { fs = Math.max(14, fs - 1); store.set('fs', fs); layout(); };
 document.getElementById('theme').onclick = () => { root.dataset.theme = root.dataset.theme === 'light' ? 'dark' : 'light'; store.set('theme', root.dataset.theme); };
 addEventListener('keydown', e => {
+  if (!document.getElementById('fsask').hidden) return;
   if (document.getElementById('toc').classList.contains('open')){ if (e.key === 'Escape') toggleToc(false); return; }
   if (['ArrowRight', 'PageDown', ' '].includes(e.key)){ e.preventDefault(); next(); }
   else if (['ArrowLeft', 'PageUp'].includes(e.key)){ e.preventDefault(); prev(); }
@@ -215,6 +236,30 @@ function toggleToc(open){
 })();
 document.getElementById('tocbtn').onclick = () => toggleToc(true);
 document.getElementById('tocclose').onclick = () => toggleToc(false);
+
+/* teljes képernyő: a böngészők csak kattintásra engedik, ezért induláskor felajánljuk */
+const fsOK = () => !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+const fsOn = () => document.fullscreenElement || document.webkitFullscreenElement;
+function toggleFs(){
+  const el = document.documentElement;
+  try {
+    if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    else (el.requestFullscreen || el.webkitRequestFullscreen).call(el)?.catch?.(() => {});
+  } catch (_) {}
+}
+(function askFs(){
+  const ask = document.getElementById('fsask'), close = () => { ask.hidden = true; };
+  if (!fsOK()){
+    document.getElementById('fsmsg').textContent = 'Ezen a telefonon a böngésző nem enged teljes képernyőt. Tipp: Safariban a Megosztás → „Főképernyőhöz adás”, és onnan megnyitva teljes képernyőn fut.';
+    document.getElementById('fsyes').hidden = true;
+    document.getElementById('fsno').textContent = 'Rendben';
+    document.getElementById('fsbtn').hidden = true;
+  }
+  document.getElementById('fsyes').onclick = () => { toggleFs(); close(); };
+  document.getElementById('fsno').onclick = close;
+  document.getElementById('fsbtn').onclick = toggleFs;
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(ev => document.addEventListener(ev, relayout));
+})();
 
 /* indulás: a betűk betöltése után tördelünk, és visszaállunk oda, ahol legutóbb tartottál */
 const startup = () => layout(store.get('pos', null));
