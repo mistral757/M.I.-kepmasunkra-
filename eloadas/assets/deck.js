@@ -46,6 +46,27 @@ function drawMirror(cv, dim){
 }
 document.querySelectorAll('canvas.mirror').forEach(cv => drawMirror(cv, cv.dataset.dim === '1'));
 
+/* pixeles könyvszekrény: 6 polc, polconként 27 könyv (a „Mennyi szöveg?” diához) */
+function drawShelf(cv){
+  const POLC = 6, KONYV = 27, BW = 2, SH = 11;
+  const W = KONYV * BW + 4, H = POLC * SH + 4; cv.width = W; cv.height = H;
+  const g = cv.getContext('2d');
+  const colors = ['#b13e53','#ef7d57','#ffcd75','#38b764','#257179','#3b5dc9','#41a6f6','#5d275d','#94b0c2'];
+  g.fillStyle = '#5d275d'; g.fillRect(0, 0, W, H);           // keret
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  for (let r = 0; r < POLC; r++){
+    const y0 = 2 + r * SH;
+    g.fillStyle = '#1a1c2c'; g.fillRect(2, y0, W - 4, SH - 1); // polc belseje
+    for (let k = 0; k < KONYV; k++){
+      const h = 6 + Math.floor(rnd() * 4);
+      g.fillStyle = colors[Math.floor(rnd() * colors.length)];
+      g.fillRect(2 + k * BW, y0 + SH - 1 - h, BW - (rnd() < .15 ? 1 : 0), h);
+    }
+    g.fillStyle = '#ef7d57'; g.fillRect(2, y0 + SH - 1, W - 4, 1); // polcdeszka
+  }
+}
+document.querySelectorAll('canvas.shelf').forEach(drawShelf);
+
 /* diák előkészítése */
 slides.forEach(sl => {
   if (sl.dataset.block){

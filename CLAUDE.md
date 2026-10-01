@@ -19,12 +19,20 @@ Ez a repó Tóth-Gyóllai Dániel (Dani) előadásának anyaga: **„A M.I. kép
 
 ## Az előadás íve
 
-1. blokk — videó, kérdések, esettörténet (OpenAI–Hugging Face-incidens) → „De hogy jutottunk idáig?”
-2. blokk — hogyan működik egy nyelvi modell (GPT, neurális háló, tanítás, adat, két fordulat, képességek, Navier–Stokes), ügynök, lendkerék, fekete doboz, jellem
-2/b. blokk — a tét: hatalomátvétel, verseny, szeptember 29-i fehér házi megállapodás, megállíthatóság
-3. blokk — „A nyelv mi magunk vagyunk” (Lubinski csak itt!), Claude-interjú, párbeszéd Dani gondolataival, a hatalomátvétel félelme
-4. blokk — dilemmák (elhagyható)
-5. blokk — két tekintet (a pontozó és Isten), arc és kert, zárás
+1. blokk — videó, kérdések, esettörténet (OpenAI–Hugging Face-incidens; benne az „egyetlen életcél”, a „mérgezett” önkép → „Mire hasonlít ez nagyon?”, az önfeláldozás) → „De hogy jutottunk idáig?”
+2. blokk — hogyan működik egy nyelvi modell (GPT, neurális háló, tanítás, adat és a könyvtár-kép, öngerjesztő kör, két fordulat, képességek, Navier–Stokes), fekete doboz és interpretálhatóság, jellem
+3. blokk — a tét: hatalomátvétel, verseny, szeptember 29-i fehér házi megállapodás, megállíthatóság
+4. blokk — „A nyelv mi magunk vagyunk” (Lubinski csak itt, rövid bemutatással!), Claude-interjú, párbeszéd Dani gondolataival
+5. blokk — a hatalomátvétel félelme (Trump-idézetek és Dani gondolatai)
+
+A dilemmák, a „Két tekintet” blokk és a régi zárás (arc és kert, 1Kor 13,12) Dani korrektúrája (okt. 1.) szerint kikerült.
+
+## Dani korrektúrájából levont szabályok (okt. 1.)
+
+- A vázlat semleges tartalom, nem neki szóló tanács: nincs „mondd ki”, „neked”, „Helye az előadásban”, „Így mondhatod el”.
+- Az 1–3. blokkban (eset, működés, tét) nincs teológiai kapocs; a teológia a 4–5. blokkban van.
+- „Lendkerék” helyett: öngerjesztő kör.
+- Relatív időmegjelölés („tegnap”) helyett dátum.
 
 ## Hangnemszabály a Claude-szövegekre (fontos)
 
@@ -32,7 +40,7 @@ A diákon gombbal indított, gépelve megjelenő válaszok (`.qa .a`) Claude fel
 
 - ne simuljanak bele Dani gondolatmenetébe; pontosítsanak, ahol kell;
 - keresztyén tartalmat a hagyomány leírásaként közöljenek („a keresztyén teológia szerint…”, „ez hitbeli állítás, nem tudományos”), ne hívő beszédként;
-- a teológiai értelmezés Dani anyaga (a tervezetben *Kiegészítés* / *Teológiai kapocs* / *Teológiai értelmezés (neked)*);
+- a teológiai értelmezés Dani anyaga (a tervezetben *Teológiai kapocs*);
 - Claude érintettségét (az Anthropic modellje; az Anthropic a verseny szereplője) ahol releváns, mondják ki;
 - a tudat kérdésében: „nem tudom” — se azt ne állítsa, hogy van, se azt, hogy biztosan nincs.
 
@@ -52,5 +60,8 @@ Személyeket (pl. politikusokat) ne minősítsen; a gondolkodásmódot lehet meg
 - Helen Keller-idézet (*The World I Live In*, 1908) — az eredetiből fordítani.
 - Trump szeptember 29-i mondatai (Dani fordítása) — a felvétellel összevetni.
 - Altman „Einstein”-érve — pontos forrás nincs meg; név szerint csak forrással.
-- „Két tekintet” blokk: Dani idézetei diktált szöveg szerkesztett átiratai — Dani ellenőrizze.
+- A Fehér Ház-i egyezmény angol szövege — a forrásból bemásolni (tervezet, 3. blokk 4. pont).
+- Az ExploitGym-feladatok megoldhatatlansága szándékos volt-e — a jelentésekben ellenőrizni.
+- A „Mi történt?” dia „több mint 70 000 üzenet” adata — forrás hiányzik.
+- Lubinski ARC-előadásának pontos napja (június 23–25.).
 - Gyorsan változó tények (modellnevek, versenyeredmények, szeptemberi események): az előadás előtt frissíteni.

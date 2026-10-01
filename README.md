@@ -13,7 +13,8 @@ eloadas/                  ← ez kerül ki a webre (Netlify)
   assets/fonts/           ← Press Start 2P és VT323 (OFL-licenc)
   media/                  ← feliratok (SRT és böngészőhöz VTT); ide jöhet a videó
 tervezet/
-  eloadas-tervezet.md     ← a teljes, hosszú előadás-tervezet (a diák forrása)
+  eloadas-tervezet.md     ← az előadás vázlata (a diák forrása)
+  eloadas-vazlat.docx     ← ugyanez Wordben, korrektúrához
 CLAUDE.md                 ← munkautasítás Claude-nak (Claude Code olvassa)
 netlify.toml              ← Netlify-beállítás
 ```
