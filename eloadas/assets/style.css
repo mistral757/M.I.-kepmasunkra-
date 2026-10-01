@@ -1,4 +1,4 @@
-/* A M.I. képmásunkra — a diák kinézete. Színpaletta: Sweetie 16 pixelpaletta. */
+/* A MI képmásunkra — a diák kinézete. Színpaletta: Sweetie 16 pixelpaletta. */
 :root{
   --ink:#1a1c2c; --night:#29366f; --slate:#333c57; --steel:#566c86; --mist:#94b0c2; --paper:#f4f4f4;
   --plum:#5d275d; --ruby:#b13e53; --ember:#ef7d57; --amber:#ffcd75;
@@ -96,6 +96,14 @@ canvas.shelf{image-rendering:pixelated;image-rendering:crisp-edges;width:348px;h
 .cover h1{font-size:40px;line-height:1.5}
 .cover .subtitle{font-size:42px;line-height:1.1;color:var(--cyan);margin:28px 0 0;max-width:720px}
 .cover .speaker{font:14px/1.6 var(--pix);color:var(--mist);margin:52px 0 0}
+.cover .qr{position:absolute;right:64px;bottom:64px;display:flex;flex-direction:column;align-items:center;gap:8px;width:200px}
+.cover .qr canvas{image-rendering:pixelated;image-rendering:crisp-edges;width:184px;height:184px;
+  box-shadow:0 -4px 0 var(--amber),0 4px 0 var(--amber),-4px 0 0 var(--amber),4px 0 0 var(--amber)}
+.cover .qr p{margin:0;text-align:center}
+.cover .qr-cap{font:11px/1.5 var(--pix);color:var(--amber);margin-top:6px!important}
+.cover .qr-url{font-size:22px;line-height:1;color:var(--mist);word-break:break-all}
+.cover .qr.missing canvas{display:none}
+.cover .qr.missing .qr-cap{color:var(--mist)}
 .verse blockquote{margin:0;font-size:46px;line-height:1.12;color:var(--paper);max-width:760px}
 .verse cite{display:block;margin-top:26px;font:14px/1 var(--pix);color:var(--amber);font-style:normal}
 

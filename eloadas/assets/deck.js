@@ -1,7 +1,8 @@
-/* A M.I. képmásunkra — a diák működése (lapozás, lépésenkénti megjelenítés, gépelés). */
+/* A MI képmásunkra — a diák működése (lapozás, lépésenkénti megjelenítés, gépelés). */
 /* ===== BEÁLLÍTÁSOK ===== */
 const GEPELES_MS = 24;                 // gépelési sebesség: ennyi ezredmásodperc betűnként (kisebb = gyorsabb)
 const TOVABB_ELOBB_A_DIAN_BELUL = true; // true: a → / lapozó előbb a dián lévő kérdést, címszót indítja
+const WEBCIM = '';                     // a weblap címe a címlapi QR-kódhoz, pl. 'https://valami.netlify.app/' — üresen: a jelenlegi cím (ha weben nyitották meg)
 const VALASZ_MIN_BETUMERET = 26;       // ha egy válasz nem fér ki, a betű eddig (px) kisebbedhet; ha így sem fér ki, részletekben jelenik meg
 
 /* ===== innentől nem kell szerkeszteni ===== */
@@ -72,6 +73,31 @@ function drawShelf(cv){
   }
 }
 document.querySelectorAll('canvas.shelf').forEach(drawShelf);
+
+/* QR-kód a címlapon: a weblapra mutat, bibliaórai nézettel (qrcode.js: Kazuhiko Arase, MIT) */
+function siteUrl(){
+  if (WEBCIM) return WEBCIM;
+  if (/^https?:$/.test(location.protocol)) return location.origin + location.pathname.replace(/index\.html$/, '');
+  return '';
+}
+function drawQR(cv){
+  const box = cv.closest('.qr'), base = siteUrl();
+  if (!base || typeof qrcode !== 'function'){
+    box.classList.add('missing');
+    box.querySelector('.qr-cap').textContent = 'QR-kód: add meg a webcímet (deck.js, WEBCIM)';
+    return;
+  }
+  const target = base + (base.includes('?') ? '&' : '?') + 'nezet=bibliaora';
+  const q = qrcode(0, 'M'); q.addData(target); q.make();
+  const n = q.getModuleCount(), quiet = 2, W = n + quiet * 2;
+  cv.width = W; cv.height = W;
+  const g = cv.getContext('2d');
+  g.fillStyle = '#f4f4f4'; g.fillRect(0, 0, W, W);
+  g.fillStyle = '#1a1c2c';
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) g.fillRect(c + quiet, r + quiet, 1, 1);
+  box.querySelector('.qr-url').textContent = base.replace(/^https?:\/\//, '').replace(/\/$/, '');
+}
+document.querySelectorAll('canvas.qr-code').forEach(drawQR);
 
 /* diák előkészítése */
 slides.forEach(sl => {
@@ -548,7 +574,7 @@ function nextNote(){
 }
 function exportNotes(){
   const lines = noteIndexes().map(i => `${i + 1}. dia — ${slideKeys[i]}\n${noteOf(i)}\n`);
-  const text = 'A M.I. képmásunkra — jegyzeteim\n\n' + (lines.join('\n') || '(nincs jegyzet)\n');
+  const text = 'A MI képmásunkra — jegyzeteim\n\n' + (lines.join('\n') || '(nincs jegyzet)\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
   a.download = 'jegyzeteim-mi-kepmasunkra.txt'; document.body.append(a); a.click();

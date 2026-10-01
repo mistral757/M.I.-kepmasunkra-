@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A M.I. képmásunkra</title>
+<title>A MI képmásunkra</title>
 <!--
 ================================================================
   SZERKESZTÉSI ÚTMUTATÓ
@@ -71,9 +71,15 @@
 <section class="slide cover">
   <canvas class="mirror" data-dim="1" aria-hidden="true"></canvas>
   <div>
-    <h1>A M.I. képmásunkra</h1>
-    <p class="subtitle">Az ember Isten-képűsége a mesterséges intelligencia tükrében</p>
+    <h1>A MI képmásunkra</h1>
+    <p class="subtitle">Tükröt tart az embernek a mesterséges intelligencia (vagyis most már szuperintelligencia…)</p>
     <p class="speaker">Tóth-Gyóllai Dániel</p>
+  </div>
+  <!-- QR-kód a weblaphoz (bibliaórai nézet). A cím a deck.js elején (WEBCIM) állítható. -->
+  <div class="qr" aria-label="QR-kód a weblaphoz">
+    <canvas class="qr-code" aria-hidden="true"></canvas>
+    <p class="qr-cap">Kövesd a telefonodon</p>
+    <p class="qr-url"></p>
   </div>
 </section>
 
@@ -524,9 +530,9 @@
   </ul>
 </section>
 
-<!-- ============ 4. BLOKK — A NYELV ÉS A M.I.: INTERJÚ CLAUDE-DAL ============ -->
+<!-- ============ 4. BLOKK — A NYELV ÉS A MI: INTERJÚ CLAUDE-DAL ============ -->
 <section class="slide divider" data-block="4. blokk">
-  <h2>A nyelv és a M.I.</h2>
+  <h2>A nyelv és a MI</h2>
   <p class="sub">Interjú Claude-dal</p>
 </section>
 
@@ -965,7 +971,7 @@
 <!-- ============ NYITÓ ABLAK ÉS BIBLIAÓRAI JEGYZETEK (ezt nem kell szerkeszteni) ============ -->
 <div id="intro" class="ovl open" role="dialog" aria-modal="true" aria-label="Indítás">
   <div class="box" id="intro-fs">
-    <p class="ttl">A M.I. képmásunkra</p>
+    <p class="ttl">A MI képmásunkra</p>
     <p id="fs-msg">Váltsunk teljes képernyőre?</p>
     <button type="button" id="fs-yes">Teljes képernyő</button>
     <button type="button" id="fs-no" class="sec">Most nem</button>
@@ -1008,6 +1014,7 @@
   </div>
 </div>
 
+<script src="assets/qrcode.js"></script>
 <script src="assets/deck.js"></script>
 </body>
 </html>

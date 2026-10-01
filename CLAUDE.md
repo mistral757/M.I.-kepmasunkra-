@@ -1,6 +1,6 @@
 # CLAUDE.md — munkautasítás
 
-Ez a repó Tóth-Gyóllai Dániel (Dani) előadásának anyaga: **„A M.I. képmásunkra. Az ember Isten-képűsége a mesterséges intelligencia tükrében.”** Református gyülekezeti közönségnek, nem szakmai hallgatóságnak szól.
+Ez a repó Tóth-Gyóllai Dániel (Dani) előadásának anyaga: **„A MI képmásunkra. Tükröt tart az embernek a mesterséges intelligencia (vagyis most már szuperintelligencia…)”** Református gyülekezeti közönségnek, nem szakmai hallgatóságnak szól.
 
 ## Nyelv és munkamód
 

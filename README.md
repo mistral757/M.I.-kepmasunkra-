@@ -1,6 +1,6 @@
-# A M.I. képmásunkra
+# A MI képmásunkra
 
-*Az ember Isten-képűsége a mesterséges intelligencia tükrében* — előadás és előadás-tervezet.
+*Tükröt tart az embernek a mesterséges intelligencia (vagyis most már szuperintelligencia…)* — előadás és előadás-tervezet.
 
 ## Mi van a repóban?
 
@@ -44,6 +44,8 @@ Megnyitáskor felugrik egy ablak: **Teljes képernyő** (a böngészők csak kat
 A jegyzetek csak az adott eszközön, abban a böngészőben maradnak meg (privát ablakban nem; ezt az ablak jelzi). A diasor nem szinkronizál: a résztvevők a saját tempójukban lapoznak, az élő kérdések válaszai csak Dani gépén jelennek meg.
 
 Közvetlen link a nézetválasztás nélkül: `…/?nezet=dani` vagy `…/?nezet=bibliaora` (a teljes képernyős kérdés ilyenkor is megjelenik).
+
+**QR-kód a címlapon:** a weblapra mutat, és rögtön a bibliaórai nézetet nyitja meg (`?nezet=bibliaora`). Ha a diasort a weblapról vetíted, a cím magától kerül bele. Ha helyi fájlból vetítesz, írd be a weblap címét az `eloadas/assets/deck.js` elején a `WEBCIM` sorba (pl. `const WEBCIM = 'https://valami.netlify.app/';`) — enélkül a címlapon a QR helyén ez a figyelmeztetés áll. A kódot a `assets/qrcode.js` rajzolja (Kazuhiko Arase, MIT-licenc), internet nélkül is.
 
 **Előadói nézet:** Dani nézetben nyomd meg a **P** betűt — külön ablak nyílik (óra, eltelt idő, következő dia, jegyzet, élő kérdés). Ha nem jelenik meg, a böngésző letiltotta a felugró ablakot: a címsor jobb szélén engedélyezd ennél az oldalnál, és nyomd meg újra a P-t. Két kijelzőnél ezt az ablakot hagyd a laptopon, a diasort húzd a projektorra, és ott nyomd meg az F-et.
 
