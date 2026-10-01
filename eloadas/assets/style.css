@@ -1,0 +1,116 @@
+/* A M.I. képmásunkra — a diák kinézete. Színpaletta: Sweetie 16 pixelpaletta. */
+:root{
+  --ink:#1a1c2c; --night:#29366f; --slate:#333c57; --steel:#566c86; --mist:#94b0c2; --paper:#f4f4f4;
+  --plum:#5d275d; --ruby:#b13e53; --ember:#ef7d57; --amber:#ffcd75;
+  --moss:#38b764; --sea:#257179; --azure:#3b5dc9; --sky:#41a6f6; --cyan:#73eff7;
+  --pix:'Press Start 2P', ui-monospace, 'Courier New', monospace;
+  --type:'VT323', ui-monospace, 'Courier New', monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0f1020;overflow:hidden}
+body{font-family:var(--type);color:var(--paper);font-variant-ligatures:none;font-feature-settings:"liga" 0}
+
+#stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform:translate(-50%,-50%);background:var(--ink);overflow:hidden}
+#stage::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:50;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.03) 0 2px,transparent 2px 4px)}
+
+.slide{position:absolute;inset:0;padding:44px 64px 84px;display:none;flex-direction:column}
+.slide.active{display:flex}
+
+/* piros blokkcímke, pixeles sarkokkal */
+.tag{align-self:flex-start;white-space:nowrap;font:12px/1 var(--pix);color:var(--paper);background:var(--ruby);padding:10px 12px;margin:4px 4px 26px;
+  box-shadow:0 -4px 0 var(--ruby),0 4px 0 var(--ruby),-4px 0 0 var(--ruby),4px 0 0 var(--ruby)}
+
+h1,h2{font-family:var(--pix);font-weight:400;margin:0;color:var(--paper);text-shadow:4px 4px 0 var(--night)}
+h2{font-size:30px;line-height:1.45;max-width:1100px}
+
+.keys{list-style:none;margin:30px 0 0;padding:0;font-size:40px;line-height:1.1}
+.keys li{position:relative;padding-left:44px;margin:0 0 14px}
+.keys li::before{content:"";position:absolute;left:6px;top:12px;width:16px;height:16px;background:var(--amber);box-shadow:4px 4px 0 var(--ember)}
+.keys small{font-size:.7em;color:var(--mist)}
+.keys.tight{font-size:33px}
+.keys.tight li{margin-bottom:6px}
+.keys.tight li::before{top:9px;width:12px;height:12px}
+.step{opacity:0}
+.step.shown{opacity:1;animation:pop .24s steps(3)}
+@keyframes pop{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+
+/* két hasáb: címszavak + Claude-terminál */
+.cols{display:grid;grid-template-columns:400px 1fr;gap:52px;flex:1;min-height:0}
+.cols .left,.cols .right{display:flex;flex-direction:column;min-height:0}
+.cols .left h2{font-size:26px}
+.cols .left .keys{font-size:34px}
+.cols .left .keys li::before{top:9px}
+
+.qa{display:flex;flex-direction:column;gap:22px;flex:1;min-height:0}
+.ask{align-self:flex-start;max-width:100%;text-align:left;font:15px/1.7 var(--pix);color:var(--ink);background:var(--amber);border:0;
+  padding:12px 18px;margin:4px 4px 8px;cursor:pointer;
+  box-shadow:0 -4px 0 var(--amber),-4px 0 0 var(--amber),4px 0 0 var(--amber),0 4px 0 var(--amber),
+             0 8px 0 var(--ember),-4px 4px 0 var(--ember),4px 4px 0 var(--ember)}
+.ask:active{transform:translateY(4px);box-shadow:0 -4px 0 var(--amber),-4px 0 0 var(--amber),4px 0 0 var(--amber),0 4px 0 var(--amber)}
+.ask[disabled]{background:var(--slate);color:var(--mist);cursor:default;transform:translateY(4px);
+  box-shadow:0 -4px 0 var(--slate),-4px 0 0 var(--slate),4px 0 0 var(--slate),0 4px 0 var(--slate)}
+.ask:focus-visible{outline:4px dashed var(--cyan);outline-offset:10px}
+
+.term{flex:1;min-height:0;overflow:auto;background:#10121f;padding:16px 24px 18px;margin:4px;
+  box-shadow:0 -4px 0 var(--sea),0 4px 0 var(--sea),-4px 0 0 var(--sea),4px 0 0 var(--sea)}
+.term .who{font:11px/1 var(--pix);color:var(--moss);margin-bottom:16px}
+.out{font-size:31px;line-height:1.02;color:var(--cyan)}
+.out p{margin:0 0 .5em}
+.qa.started .ask{display:none}
+.out p.sent{color:var(--amber)}
+.cursor{display:inline-block;width:.5em;height:.9em;margin-left:2px;background:var(--cyan);vertical-align:-.08em;animation:blink 1s steps(1) infinite}
+.cursor.idle{opacity:.5}
+@keyframes blink{50%{visibility:hidden}}
+.term::-webkit-scrollbar{width:12px}
+.term::-webkit-scrollbar-thumb{background:var(--steel)}
+.term::-webkit-scrollbar-track{background:#10121f}
+
+/* párbeszéd: Dani idézete + Claude válasza */
+.chips{display:flex;flex-wrap:wrap;gap:6px 26px;margin:16px 0 22px;padding:0;list-style:none;font-size:28px;color:var(--mist)}
+.chips li::before{content:"";display:inline-block;width:10px;height:10px;background:var(--amber);margin-right:10px;vertical-align:2px}
+blockquote.dani{margin:4px 4px 20px;padding:14px 22px 16px;background:var(--plum);color:var(--amber);font-size:32px;line-height:1.02;
+  box-shadow:0 -4px 0 var(--amber),0 4px 0 var(--amber),-4px 0 0 var(--amber),4px 0 0 var(--amber)}
+blockquote.dani::before{content:attr(data-who);display:block;font:11px/1 var(--pix);color:var(--paper);margin-bottom:10px}
+.dialog h2{font-size:26px}
+blockquote.dani.other{background:var(--slate);color:var(--paper);box-shadow:0 -4px 0 var(--sky),0 4px 0 var(--sky),-4px 0 0 var(--sky),4px 0 0 var(--sky)}
+blockquote.dani.other::before{color:var(--sky)}
+.dialog .qa{gap:18px}
+
+/* kijelentő diák */
+.statement{justify-content:center}
+.statement .big{font:34px/1.65 var(--pix);color:var(--amber);text-shadow:4px 4px 0 var(--ruby);margin:0;max-width:1100px}
+.statement .sub{font-size:42px;color:var(--mist);margin:34px 0 0}
+
+.divider{justify-content:center}
+.divider h2{font-size:46px}
+.divider .sub{font-size:46px;color:var(--cyan);margin:30px 0 0}
+
+/* címlap és igés diák a pixeltükörrel */
+.cover,.verse{flex-direction:row;align-items:center;gap:72px}
+.cover .tag,.verse .tag,.statement .tag,.divider .tag{position:absolute;top:44px;left:64px;margin:4px}
+canvas.mirror{image-rendering:pixelated;image-rendering:crisp-edges;width:312px;height:442px;flex:none}
+canvas.mirror.small{width:216px;height:306px}
+.cover h1{font-size:40px;line-height:1.5}
+.cover .subtitle{font-size:42px;line-height:1.1;color:var(--cyan);margin:28px 0 0;max-width:720px}
+.cover .speaker{font:14px/1.6 var(--pix);color:var(--mist);margin:52px 0 0}
+.verse blockquote{margin:0;font-size:46px;line-height:1.12;color:var(--paper);max-width:760px}
+.verse cite{display:block;margin-top:26px;font:14px/1 var(--pix);color:var(--amber);font-style:normal}
+
+/* alsó sáv */
+#hud{position:absolute;left:64px;right:64px;bottom:26px;display:flex;align-items:center;gap:18px;z-index:40;font:11px/1 var(--pix);color:var(--steel)}
+#bar{flex:1;height:8px;background:var(--slate)}
+#bar i{display:block;height:100%;width:0;background:var(--steel)}
+#hud button{font:11px/1 var(--pix);background:none;border:0;color:var(--steel);cursor:pointer;padding:8px 6px}
+#hud button:hover,#hud button:focus-visible{color:var(--paper);outline:none}
+
+#menu{position:absolute;inset:40px 110px 70px;z-index:60;background:var(--ink);padding:26px 32px;overflow:auto;display:none;
+  box-shadow:0 -4px 0 var(--amber),0 4px 0 var(--amber),-4px 0 0 var(--amber),4px 0 0 var(--amber)}
+#menu.open{display:block}
+#menu p{font:12px/1.6 var(--pix);color:var(--amber);margin:0 0 18px}
+#menu ol{columns:2;column-gap:40px;margin:0;padding-left:44px;font-size:26px;color:var(--steel)}
+#menu li{break-inside:avoid}
+#menu li button{font:26px/1.15 var(--type);color:var(--mist);background:none;border:0;padding:2px 0;cursor:pointer;text-align:left}
+#menu li button:hover,#menu li button:focus-visible,#menu li.here button{color:var(--paper);outline:none}
+
+@media (prefers-reduced-motion:reduce){.cursor{animation:none}.step.shown{animation:none}}

@@ -1,0 +1,5 @@
+/* Betűtípusok — SIL Open Font License 1.1 (licenc: fonts/OFL-*.txt)
+   Press Start 2P © The Press Start 2P Project Authors
+   VT323 © The VT323 Project Authors */
+@font-face{font-family:'Press Start 2P';src:url('fonts/PressStart2P-Regular.ttf') format('truetype');font-display:block}
+@font-face{font-family:'VT323';src:url('fonts/VT323-Regular.ttf') format('truetype');font-display:block}
