@@ -6,13 +6,6 @@ const D = require('docx');
 const [,, src, dst] = process.argv;
 const md = fs.readFileSync(src, 'utf8').split('\n');
 
-const COMMENT_ANCHOR = 'Megjegyzés — az egyezmény angol szövege.';
-const COMMENT_TEXT = [
-  'A kért angol szöveg helye. A teljes, hiteles szöveget a munkakörnyezet hálózati korlátozása miatt nem tudtam letölteni, ezért nem írtam be emlékezetből.',
-  'Források: en.wikisource.org/wiki/White_House_Accord_on_Super_Intelligence; Forbes, 2026. szept. 30. („Here’s The White House’s 308-Word AI ‘Accord’ In Full”); Washington Examiner („READ IN FULL”).',
-  'Ha bemásolod ide, a diához előadói jegyzetként is beteszem.'
-];
-
 // soron belüli formázás: **félkövér**, *dőlt*, `kód`, [szöveg](url)
 function runs(text, base = {}) {
   const out = [];
@@ -35,7 +28,7 @@ function runs(text, base = {}) {
 }
 
 const children = [];
-let tableRows = null, commentPlaced = false;
+let tableRows = null;
 const flushTable = () => {
   if (!tableRows) return;
   const widths = [1700, 4660, 3000];
@@ -74,23 +67,17 @@ for (const raw of md) {
   } else if ((m = line.match(/^> ?(.*)$/))) {
     const text = m[1];
     const quote = { indent: { left: 567 }, border: { left: { style: D.BorderStyle.SINGLE, size: 12, color: '8E7CC3', space: 8 } } };
-    if (!commentPlaced && text.includes(COMMENT_ANCHOR)) {
-      commentPlaced = true;
-      children.push(new D.Paragraph({ ...quote, children: [new D.CommentRangeStart(0), ...runs(text), new D.CommentRangeEnd(0),
-        new D.TextRun({ children: [new D.CommentReference(0)] })] }));
-    } else children.push(new D.Paragraph({ ...quote, children: runs(text) }));
+    if (!text.trim()) continue;
+    children.push(new D.Paragraph({ ...quote, children: runs(text.replace(/^- /, '– ')) }));
   } else {
     children.push(new D.Paragraph({ children: runs(line) }));
   }
 }
 flushTable();
-if (!commentPlaced) throw new Error('A megjegyzés horgonya nem található');
 
 const doc = new D.Document({
   creator: 'Tóth-Gyóllai Dániel',
   title: 'A MI képmásunkra — előadásvázlat',
-  comments: { children: [{ id: 0, author: 'Claude', initials: 'C', date: new Date('2026-10-01T12:00:00Z'),
-    children: COMMENT_TEXT.map(t => new D.Paragraph({ children: [new D.TextRun(t)] })) }] },
   styles: {
     default: { document: { run: { font: 'Calibri', size: 22 }, paragraph: { spacing: { after: 120, line: 276 } } } },
     paragraphStyles: [
