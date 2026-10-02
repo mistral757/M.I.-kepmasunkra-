@@ -35,6 +35,8 @@ A dilemmák, a „Két tekintet” blokk és a régi zárás (arc és kert, 1Kor
 - Az 1–3. blokkban (eset, működés, tét) nincs teológiai kapocs; a teológia a 4–5. blokkban van.
 - „Lendkerék” helyett: öngerjesztő kör.
 - Relatív időmegjelölés („tegnap”) helyett dátum.
+- A vázlat megosztható dokumentum (okt. 2.): nincs benne Daninak szóló kiszólás, munkafolyamatra utalás („nem tudtam letölteni”, „ellenőrizni”, „⚠”); a még ellenőrizendő tételek csak itt, a „Nyitott ellenőrzések” alatt vannak. Ahol egy állítás bizonytalan, azt a szövegen belül, tartalmilag jelezd („pontos forrása nem ismert”).
+- A párbeszédes blokkok (4. és 5.) elején Dani gondolatmenete teljes szövegében áll; a pontoknál a rá vonatkozó teljes részlet, a dián lévő Claude-válasz, és „Claude, bővebben” címmel a hosszabb kifejtés.
 
 ## Hangnemszabály a Claude-szövegekre (fontos)
 

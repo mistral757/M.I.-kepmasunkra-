@@ -77,7 +77,8 @@ def md_block(line):
         return f'<p class="ol cont">{inline(m.group(1))}</p>'
     m = re.match(r'^> ?(.*)$', line)
     if m:
-        return f'<blockquote>{inline(m.group(1))}</blockquote>' if m.group(1).strip() else ''
+        q = re.sub(r'^- ', '– ', m.group(1))
+        return f'<blockquote><p>{inline(q)}</p></blockquote>' if q.strip() else ''
     cls = ''
     if line.startswith('**Claude (dián)'): cls = 'claude'
     elif line.startswith(('**Teológiai kapocs', '**Ige.', '**A felelősség', '**A tükör-metafora')): cls = 'teol'
@@ -114,7 +115,7 @@ def build():
     blocks_seen = set()
     pages = []
     for i, s in enumerate(slides):
-        body = ''.join(x for x in chunks[i] if x)
+        body = ''.join(x for x in chunks[i] if x).replace('</p></blockquote><blockquote><p>', '</p><p>')  # egymás utáni idézetsorok egy blokkban
         dia = ''.join(f'<li>{html.escape(x)}</li>' for x in s['items'])
         extra = ''.join(f'<p>{html.escape(x)}</p>' for x in s['extra'])
         head = ''
@@ -131,7 +132,8 @@ def build():
                   f'<p class="subt">{inline(subtitle)}</p>{"".join(x for x in front if x)}'
                   '<p class="how">Lapozás: húzd oldalra, vagy koppints a képernyő jobb / bal szélére. '
                   'Felül mindig látszik, melyik diánál tartasz; új dián a sáv felvillan.</p></section>')
-    app_html = f'<section class="dia app" data-n="-1" id="dapp">{"".join(x for x in appendix if x)}</section>'
+    app_body = ''.join(x for x in appendix if x)
+    app_html = f'<section class="dia app" data-n="-1" id="dapp">{app_body}</section>' if app_body else ''
     tpl = (Path(__file__).resolve().parent / 'olvaso_sablon.html').read_text(encoding='utf-8')
     out = (tpl.replace('/*__META__*/', json.dumps(meta, ensure_ascii=False))
               .replace('<!--__BODY__-->', front_html + ''.join(pages) + app_html)
